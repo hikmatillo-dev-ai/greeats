@@ -6,13 +6,12 @@
 <title>Greets — AI Chat</title>
 <!-- Firebase SDK -->
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { initializeApp }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, doc, setDoc, getDoc }
-    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { getDatabase, ref, set, get }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-  // ── O'Z FIREBASE CONFIG INI KIRITING ──────────────────────────────────
   const firebaseConfig = {
     apiKey:            "AIzaSyCl6M0i4A9g7WRrnme-z_XdYhiRoHeXic8",
     authDomain:        "greets-early-testing.firebaseapp.com",
@@ -22,14 +21,13 @@
     messagingSenderId: "394029642021",
     appId:             "1:394029642021:web:68b42270248e77dd68aacc"
   };
-  // ─────────────────────────────────────────────────────────────────────
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db   = getFirestore(app);
+  const rtdb = getDatabase(app);
   const gProv = new GoogleAuthProvider();
 
-  window._fb = { auth, db, gProv, signInWithPopup, signOut, onAuthStateChanged, doc, setDoc, getDoc };
+  window._fb = { auth, rtdb, gProv, signInWithPopup, signOut, onAuthStateChanged, ref, set, get };
 
   onAuthStateChanged(auth, user => {
     window._fbUser = user || null;
@@ -1306,30 +1304,20 @@ async function googleSignOut() {
 async function syncFromFirestore(user) {
   if (!window._fb || !user) return;
   try {
-    const snap = await window._fb.getDoc(window._fb.doc(window._fb.db, 'users', user.uid));
+    const snap = await window._fb.get(window._fb.ref(window._fb.rtdb, 'users/' + user.uid));
     if (snap.exists()) {
-      const d = snap.data();
+      const d = snap.val();
       if (d.chats) { chats = d.chats; saveCh(); }
       if (d.pinnedIds) { pinnedIds = d.pinnedIds; savePinned(); }
       if (d.archivedIds) { archivedIds = d.archivedIds; saveArchived(); }
       if (d.projects) { projects = d.projects; saveProjects(); }
-      if (d.chatProjects) { 
-        chatProjects = d.chatProjects; 
-        saveChatProjects();   // ← Bu yerda xato edi: saveCPJ() emas!
-      }
-      if (d.prefs) { 
-        prefs = d.prefs; 
-        savePr(); 
-        applyTheme(prefs.theme || 'light', false); 
-      }
+      if (d.chatProjects) { chatProjects = d.chatProjects; saveCPJ(); }
+      if (d.prefs) { prefs = d.prefs; savePr(); applyTheme(prefs.theme || 'light', false); }
       renderHist();
-      if (actId) renderAllMsgs(gact()); 
-      else renderWelcome();
+      if (actId) renderAllMsgs(gact()); else renderWelcome();
       toast("✓ Ma'lumotlar yuklandi");
     }
-  } catch(e) { 
-    console.warn("Firestore o'qish xatosi:", e.message); 
-  }
+  } catch(e) { console.warn("RTDB o'qish:', e.message"); }
 }
 
 async function saveToFirestore() {
@@ -1339,11 +1327,13 @@ async function saveToFirestore() {
     const clean = chats.map(c => ({...c, msgs: c.msgs.map(m =>
       m.files ? {...m, files: m.files.map(f => ({name:f.name, size:f.size, type:f.type}))} : m
     )}));
-    await window._fb.setDoc(window._fb.doc(window._fb.db, 'users', user.uid), {
+    // Realtime Database: undefined qiymatlarni null ga o'girish kerak
+    const payload = JSON.parse(JSON.stringify({
       chats: clean, pinnedIds, archivedIds, projects, chatProjects, prefs,
       updatedAt: Date.now()
-    });
-  } catch(e) { console.warn('Firestore yozish:', e.message); }
+    }));
+    await window._fb.set(window._fb.ref(window._fb.rtdb, 'users/' + user.uid), payload);
+  } catch(e) { console.warn('Realtime DB yozish:', e.message); }
 }
 
 function updateUserBar(user) {
@@ -1430,7 +1420,6 @@ const _origSaveCh = saveCh;
 // Instead patch the send flow - override the existing fetch block won't work easily
 // so we attach to the existing sendMsg by wrapping it
 const _origSendMsg = window.sendMsg;
-
 </script>
 </body>
 </html>
