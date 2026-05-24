@@ -1,0 +1,5 @@
+{
+  "ANTHROPIC_API_KEY": "AIzaSyBINwdqIoC-DToJWRzBBXJspXAbQhyhITg",
+  "PORT": 3000,
+  "MODEL": "claude-3-5-haiku-20241022"
+}
