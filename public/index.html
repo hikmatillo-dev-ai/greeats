@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz" data-theme="light">
 <head>
+  <link rel="icon" type="x-icon" href="logogr.png">
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Greets — AI Chat</title>
@@ -378,9 +379,9 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .auth-photo{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 </style>
 </head>
-<body>
+<body class="sb-collapsed">
 
-<aside class="sidebar" id="sb">
+<aside class="sidebar collapsed" id="sb">
   <div class="sb-top">
     <a class="logo" href="#">
       <img class="logo-img" src="logogr.png" alt="G"
@@ -678,8 +679,8 @@ body.sb-collapsed .tgl-outer{display:flex;}
 <script>
 // ─── STATE ───
 const SK='greets_v3_chats', PK='greets_v3_prefs', PRK='greets_v3_profile', PIK='greets_v3_pinned', AIK='greets_v3_archived', PROJK='greets_v3_projects', CPJK='greets_v3_chat_projects';
-let chats=[], actId=null, loading=false, prov='gemini', provs=[], sbOpen=true, confCb=null, editIdx=null, shareLink='';
-let prefs=tp(PK,{}), profile=tp(PRK,{name:''});
+let chats=[], actId=null, loading=false, prov='gemini', provs=[], sbOpen=false, confCb=null, editIdx=null, shareLink='';
+let prefs=tp(PK,{}), profile=tp(PRK,{name:''}), userInfo=tp('greets_userinfo',{name:'',about:''});
 // FIX 2: pin/archive from localStorage
 let pinnedIds=tp(PIK,[]), archivedIds=tp(AIK,[]);
 // FIX 3: projects from localStorage
@@ -692,6 +693,7 @@ function tp(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v!==null
 function saveCh(){localStorage.setItem(SK,JSON.stringify(chats));}
 function savePr(){localStorage.setItem(PK,JSON.stringify(prefs));}
 function savePrf(){localStorage.setItem(PRK,JSON.stringify(profile));}
+function saveUserInfo(){localStorage.setItem('greets_userinfo',JSON.stringify(userInfo));}
 function savePinned(){localStorage.setItem(PIK,JSON.stringify(pinnedIds));}
 function saveArchived(){localStorage.setItem(AIK,JSON.stringify(archivedIds));}
 function saveProjects(){localStorage.setItem(PROJK,JSON.stringify(projects));}
@@ -891,6 +893,13 @@ function oClick(e){
   if(!document.getElementById('mdrop').contains(e.target)&&!document.getElementById('mbtn').contains(e.target))closeDrop();
   if(!document.getElementById('moreDrop').contains(e.target)&&!document.getElementById('morebtn').contains(e.target))closeMoreMenu();
   if(!document.getElementById('attachPanel').contains(e.target)&&!document.getElementById('attachBtn').contains(e.target))closeAttach();
+  // Sidebar tashqarisiga bosish - yopish
+  const sb=document.getElementById('sb');
+  if(sbOpen && !sb.contains(e.target)){
+    sbOpen=false;
+    sb.classList.add('collapsed');
+    document.body.classList.add('sb-collapsed');
+  }
 }
 
 // ─── CHATS ───
@@ -1118,7 +1127,8 @@ function om(id){
 
 // ─── WELCOME ───
 function renderWelcome(){
-  const uname=profile.name||'';
+  const fbU2=window._fbUser;
+  const uname=fbU2?fbU2.displayName?.split(' ')[0]:(userInfo.name||profile.name||'');
   const greet=uname?`Salom, ${esc(uname)}! 👋`:'Greets bilan salomlashing';
   document.getElementById('msgsArea').innerHTML=`<div class="welcome">
 <img class="wlogo" src="logogr.png" alt="G" style="width:60px;height:60px;border-radius:16px;object-fit:cover;margin-bottom:18px"
@@ -1160,7 +1170,16 @@ async function sendMsg(){
   setLoad(true);hideErr();
 
   const ty=addTyp();
-  const api=chat.msgs.filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:m.content}));
+  // Foydalanuvchi ma'lumotlarini xabarlarga qo'shish
+  const sysCtx=[];
+  const fbU=window._fbUser;
+  const uName=fbU?fbU.displayName:(userInfo.name||profile.name||'');
+  const uAbout=userInfo.about||'';
+  if(uName||uAbout){
+    const ctx='[Foydalanuvchi haqida: Ismi: '+(uName||'noma\'lum')+(uAbout?', '+uAbout:'')+']';
+    sysCtx.push({role:'user',content:ctx},{role:'assistant',content:'Tushunarli, eslab qoldim.'});
+  }
+  const api=[...sysCtx,...chat.msgs.filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:m.content}))];
   try{
     const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:api,provider:prov})});
     ty.remove();const d=await r.json();
@@ -1324,6 +1343,7 @@ async function syncFromFirestore(user) {
       if (d.projects) { projects = d.projects; saveProjects(); }
       if (d.chatProjects) { chatProjects = d.chatProjects; saveCPJ(); }
       if (d.prefs) { prefs = d.prefs; savePr(); applyTheme(prefs.theme || 'light', false); }
+      if (d.userInfo) { userInfo = d.userInfo; saveUserInfo(); }
       renderHist();
       if (actId) renderAllMsgs(gact()); else renderWelcome();
       toast("✓ Ma'lumotlar yuklandi");
@@ -1340,7 +1360,7 @@ async function saveToFirestore() {
     )}));
     // Realtime Database: undefined qiymatlarni null ga o'girish kerak
     const payload = JSON.parse(JSON.stringify({
-      chats: clean, pinnedIds, archivedIds, projects, chatProjects, prefs,
+      chats: clean, pinnedIds, archivedIds, projects, chatProjects, prefs, userInfo,
       updatedAt: Date.now()
     }));
     await window._fb.set(window._fb.ref(window._fb.rtdb, 'users/' + user.uid), payload);
@@ -1385,10 +1405,17 @@ function renderProfModal() {
           <div style="font-size:12px;color:var(--text3);margin-top:3px">${esc(user.email || '')}</div>
         </div>
       </div>
-      <div class="auth-info">✅ Google hisobi orqali kirgansiz. Suhbatlaringiz barcha qurilmalaringizda saqlanadi va sinxronlanadi.</div>
-      <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:4px">
-        <button class="btn-s" onclick="cm('profM')">Yopish</button>
+      <div class="pfield" style="margin-top:14px">
+        <div class="plbl">AI sizni qanday chaqirsin?</div>
+        <input class="pin" id="uiName" type="text" placeholder="Ismingiz..." value="${esc(userInfo.name||user.displayName||'')}"/>
+      </div>
+      <div class="pfield">
+        <div class="plbl">O'zingiz haqida (ixtiyoriy)</div>
+        <input class="pin" id="uiAbout" type="text" placeholder="Masalan: dasturchi, 25 yosh, Toshkentda yashayman..." value="${esc(userInfo.about||'')}"/>
+      </div>
+      <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:8px">
         <button class="btn-d" onclick="googleSignOut()">Chiqish</button>
+        <button class="btn-p" onclick="saveUserInfoFromModal()">Saqlash</button>
       </div>`;
   } else {
     body.innerHTML = `
@@ -1410,11 +1437,17 @@ function renderProfModal() {
         Google bilan kirish
       </button>
       <div class="auth-divider">yoki</div>
-      <div class="pfield"><div class="plbl">Ism</div>
-        <input class="pin" id="pinput" type="text" placeholder="Ismingizni kiriting" oninput="updPP()"/></div>
-      <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:4px">
+      <div class="pfield">
+        <div class="plbl">AI sizni qanday chaqirsin?</div>
+        <input class="pin" id="uiName" type="text" placeholder="Ismingiz..." value="${esc(userInfo.name||'')}"/>
+      </div>
+      <div class="pfield">
+        <div class="plbl">O'zingiz haqida (ixtiyoriy)</div>
+        <input class="pin" id="uiAbout" type="text" placeholder="Masalan: dasturchi, 25 yosh..." value="${esc(userInfo.about||'')}"/>
+      </div>
+      <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:8px">
         <button class="btn-s" onclick="cm('profM')">Bekor</button>
-        <button class="btn-p" onclick="saveProf2()">Saqlash</button>
+        <button class="btn-p" onclick="saveUserInfoFromModal()">Saqlash</button>
       </div>`;
     const pi = document.getElementById('pinput');
     if (pi) pi.value = profile.name || '';
@@ -1431,6 +1464,20 @@ const _origSaveCh = saveCh;
 // Instead patch the send flow - override the existing fetch block won't work easily
 // so we attach to the existing sendMsg by wrapping it
 const _origSendMsg = window.sendMsg;
+
+function saveUserInfoFromModal(){
+  const n=document.getElementById('uiName');
+  const a=document.getElementById('uiAbout');
+  if(n) userInfo.name=n.value.trim();
+  if(a) userInfo.about=a.value.trim();
+  saveUserInfo();
+  // Firestore ga ham saqlash
+  if(typeof saveToFirestore==='function') saveToFirestore();
+  cm('profM');
+  toast('Saqlandi');
+  // Welcome screen yangilansin
+  if(document.querySelector('.welcome')) renderWelcome();
+}
 </script>
 </body>
 </html>
