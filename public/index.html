@@ -31,9 +31,14 @@
 
   onAuthStateChanged(auth, user => {
     window._fbUser = user || null;
-    if (typeof window._onFbAuth === 'function') window._onFbAuth(user);
+    if (typeof window._onFbAuth === 'function') {
+      window._onFbAuth(user);
+    } else {
+      // Main script yuklanmagan — navbatga qo'yamiz
+      window._pendingFbAuth = user;
+    }
   });
-</script>
+<\/script>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1280,10 +1285,16 @@ window._onFbAuth = function(user) {
   updateUserBar(user);
   if (user) syncFromFirestore(user);
 };
-if (window._fbUser !== undefined) updateUserBar(window._fbUser);
+// Agar Firebase auth holati main script dan oldin kelgan bo'lsa
+if (window._pendingFbAuth !== undefined) {
+  window._onFbAuth(window._pendingFbAuth);
+  window._pendingFbAuth = undefined;
+} else if (window._fbUser !== undefined) {
+  updateUserBar(window._fbUser);
+}
 
 async function googleSignIn() {
-  if (!window._fb) { toast("Firebase sozlanmagan — firebaseConfig ni to'ldiring"); return; }
+  if (!window._fb) { toast('Firebase sozlanmagan — firebaseConfig ni to'ldiring'); return; }
   try {
     const result = await window._fb.signInWithPopup(window._fb.auth, window._fb.gProv);
     await syncFromFirestore(result.user);
@@ -1315,9 +1326,9 @@ async function syncFromFirestore(user) {
       if (d.prefs) { prefs = d.prefs; savePr(); applyTheme(prefs.theme || 'light', false); }
       renderHist();
       if (actId) renderAllMsgs(gact()); else renderWelcome();
-      toast("✓ Ma'lumotlar yuklandi");
+      toast('✓ Ma'lumotlar yuklandi');
     }
-  } catch(e) { console.warn("RTDB o'qish:', e.message"); }
+  } catch(e) { console.warn('RTDB o'qish:', e.message); }
 }
 
 async function saveToFirestore() {
