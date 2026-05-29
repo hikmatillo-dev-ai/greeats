@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="uz" data-theme="light">
 <head>
-  <link rel="icon" type="x-icon" href="logogr.png">
+    <link rel="icon" type="x-icon" href="logogr.png">
+
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Greets — AI Chat</title>
@@ -895,7 +896,10 @@ function oClick(e){
   if(!document.getElementById('attachPanel').contains(e.target)&&!document.getElementById('attachBtn').contains(e.target))closeAttach();
   // Sidebar tashqarisiga bosish - yopish
   const sb=document.getElementById('sb');
-  if(sbOpen && !sb.contains(e.target)){
+  const tglBtn=document.querySelector('.tgl-outer');
+  const sbiBtn=document.querySelector('.sbi');
+  const clickedToggle=(tglBtn&&tglBtn.contains(e.target))||(sbiBtn&&sbiBtn.contains(e.target));
+  if(sbOpen && !sb.contains(e.target) && !clickedToggle){
     sbOpen=false;
     sb.classList.add('collapsed');
     document.body.classList.add('sb-collapsed');
