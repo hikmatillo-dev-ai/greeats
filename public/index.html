@@ -388,12 +388,24 @@ body.sb-collapsed .tgl-outer{display:flex;}
 #splashScreen.hide{opacity:0;transform:scale(1.04);pointer-events:none;}
 .splash-logo{
   width:72px;height:72px;border-radius:20px;
-  background:var(--accent);
+  background:#fff;
   display:flex;align-items:center;justify-content:center;
-  font-size:32px;font-weight:800;color:#fff;
-  animation:splashPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+  font-size:32px;font-weight:800;color:var(--accent);
+  animation:splashPop .7s cubic-bezier(.34,1.56,.64,1) forwards;
   opacity:0;
-  box-shadow:0 8px 32px rgba(16,163,127,.25);
+  position:relative;
+}
+.splash-logo::after{
+  content:'';
+  position:absolute;inset:-8px;
+  border-radius:28px;
+  background:radial-gradient(circle, rgba(16,163,127,.18) 0%, rgba(16,163,127,.06) 50%, transparent 70%);
+  animation:splashGlow 2s ease infinite;
+  z-index:-1;
+}
+@keyframes splashGlow{
+  0%,100%{opacity:.6;transform:scale(1);}
+  50%{opacity:1;transform:scale(1.08);}
 }
 .splash-logo img{width:100%;height:100%;object-fit:cover;border-radius:20px;}
 .splash-title{
@@ -834,30 +846,48 @@ body.sb-collapsed .tgl-outer{display:flex;}
 (function(){
   const splash = document.getElementById('splashScreen');
   if(!splash) return;
-  // Min 1.2s show, then hide
-  const minTime = 1200;
+  const minTime = 1400;
   const startTime = Date.now();
+
   function hideSplash(){
     const elapsed = Date.now() - startTime;
     const delay = Math.max(0, minTime - elapsed);
-    setTimeout(()=>{
+    setTimeout(function(){
       splash.classList.add('hide');
-      setTimeout(()=>{ splash.style.display='none'; }, 500);
+      setTimeout(function(){ splash.style.display='none'; }, 500);
     }, delay);
   }
-  if(document.readyState === 'complete'){
-    hideSplash();
+
+  function checkReady(){
+    // Internet bor va sahifa tayyor bo'lsa yashir
+    if(document.readyState === 'complete'){
+      hideSplash();
+    } else {
+      // Tayyor emas - yana kuting
+      setTimeout(checkReady, 300);
+    }
+  }
+
+  // Offline bo'lsa splash davom etsin, online bo'lgach yashirsin
+  if(!navigator.onLine){
+    window.addEventListener('online', function onOnline(){
+      window.removeEventListener('online', onOnline);
+      setTimeout(checkReady, 500);
+    });
   } else {
-    window.addEventListener('load', hideSplash);
-    // Fallback
-    setTimeout(hideSplash, 3000);
+    if(document.readyState === 'complete'){
+      hideSplash();
+    } else {
+      window.addEventListener('load', hideSplash);
+      setTimeout(checkReady, 4000);
+    }
   }
 })();
 
 // ─── STATE ───
 const SK='greets_v3_chats', PK='greets_v3_prefs', PRK='greets_v3_profile', PIK='greets_v3_pinned', AIK='greets_v3_archived', PROJK='greets_v3_projects', CPJK='greets_v3_chat_projects';
 let chats=[], actId=null, loading=false, prov='groq', provs=[], sbOpen=false, confCb=null, editIdx=null, shareLink='';
-let prefs=tp(PK,{}), profile=tp(PRK,{name:''}), userInfo=tp('greets_userinfo',{name:'',about:''});
+let prefs=tp(PK,{}), profile=tp(PRK,{name:''}), userInfo=tp("greets_userinfo",{name:'',about:''});
 // FIX 2: pin/archive from localStorage
 let pinnedIds=tp(PIK,[]), archivedIds=tp(AIK,[]);
 // FIX 3: projects from localStorage
@@ -870,7 +900,7 @@ function tp(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v!==null
 function saveCh(){localStorage.setItem(SK,JSON.stringify(chats));}
 function savePr(){localStorage.setItem(PK,JSON.stringify(prefs));}
 function savePrf(){localStorage.setItem(PRK,JSON.stringify(profile));}
-function saveUserInfo(){localStorage.setItem('greets_userinfo',JSON.stringify(userInfo));}
+function saveUserInfo(){localStorage.setItem("greets_userinfo",JSON.stringify(userInfo));}
 function savePinned(){localStorage.setItem(PIK,JSON.stringify(pinnedIds));}
 function saveArchived(){localStorage.setItem(AIK,JSON.stringify(archivedIds));}
 function saveProjects(){localStorage.setItem(PROJK,JSON.stringify(projects));}
@@ -886,7 +916,7 @@ function fmtBytes(b){if(b<1024)return b+'B';if(b<1024*1024)return (b/1024).toFix
   chats=tp(SK,[]);
   applyTheme(prefs.theme||'light',false);
   document.getElementById('thSel').value=prefs.theme||'light';
-  updProfileUI(); renderHist(); loadProvs(); renderWelcome();
+  updProfileUI(); renderHist(); loadProvs(); renderWelcome(); updML();
   document.addEventListener('click',oClick);
 })();
 
@@ -1103,7 +1133,7 @@ function delChat(id,e){
     delete chatProjects[id];
     saveCh();savePinned();saveArchived();saveChatProjects();
     if(actId===id){actId=null;renderWelcome();}
-    renderHist();toast('Suhbat o\'chirildi');cm('confM');
+    renderHist();toast("Suhbat o'chirildi");cm('confM');
   });
 }
 function confirmDel(){if(!actId)return toast('Faol suhbat yo\'q');delChat(actId,null);}
@@ -1779,6 +1809,38 @@ document.getElementById('fileViewer').addEventListener('click', function(e){
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape') closeFileViewer();
 });
+
+// ─── SWIPE TO OPEN SIDEBAR ───────────────────────────────────────────
+(function(){
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var EDGE_ZONE   = 30;  // px from left edge
+  var MIN_SWIPE   = 60;  // min px to trigger
+
+  document.addEventListener('touchstart', function(e){
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, {passive: true});
+
+  document.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    var absDy = Math.abs(dy);
+
+    // Swipe right from left edge — open sidebar
+    if(!sbOpen && touchStartX <= EDGE_ZONE && dx > MIN_SWIPE && absDy < 80){
+      sbOpen = true;
+      document.getElementById('sb').classList.remove('collapsed');
+      document.body.classList.remove('sb-collapsed');
+    }
+    // Swipe left — close sidebar
+    else if(sbOpen && dx < -MIN_SWIPE && absDy < 80){
+      sbOpen = false;
+      document.getElementById('sb').classList.add('collapsed');
+      document.body.classList.add('sb-collapsed');
+    }
+  }, {passive: true});
+})();
 </script>
 
 <!-- FILE VIEWER MODAL -->
