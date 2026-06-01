@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz" data-theme="light">
 <head>
-  <link rel="icon" type="x-icon" href="logogr.png">
+  <link rel="icon" type="x-icon" href="logogr.png"> 
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Greets — AI Chat</title>
@@ -530,6 +530,29 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .file-card:hover{background:var(--surf2);transform:translateY(-1px);}
 .file-card-img{cursor:pointer;transition:transform .15s;}
 .file-card-img:hover{transform:scale(1.02);}
+
+/* ─── DICTATE + SEND ─────────────────────────────────────────────── */
+.voice-row{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.mic-btn{
+  width:28px;height:28px;border-radius:8px;
+  background:none;border:none;
+  color:var(--text3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .15s, background .15s;
+  flex-shrink:0;
+}
+.mic-btn:hover{background:var(--surf);color:var(--text2);}
+.mic-btn.recording{color:var(--danger);animation:micPulse .8s ease infinite;}
+@keyframes micPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.sndbtn{
+  width:32px;height:32px;background:var(--text);border:none;border-radius:9px;
+  color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:opacity .15s;flex-shrink:0;
+}
+[data-theme="dark"] .sndbtn{background:#fff;color:#0d0d0d;}
+.sndbtn:hover{opacity:.82;}
+.sndbtn:disabled{background:var(--border2);color:var(--text3);cursor:not-allowed;opacity:1;}
+.sndbtn.loading svg{animation:spin .8s linear infinite;}
 </style>
 </head>
 <body class="sb-collapsed">
@@ -683,9 +706,19 @@ body.sb-collapsed .tgl-outer{display:flex;}
           <input type="file" id="audioInput" accept="audio/*" style="display:none" onchange="handleFileSelect(event,'audio')"/>
           <textarea class="chata" id="chatIn" placeholder="Xabar yozing..." rows="1"
             oninput="ar(this);ucc(this.value.length)" onkeydown="hk(event)"></textarea>
-          <button class="sndbtn" id="sndbtn" onclick="sendMsg()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
+          <div class="voice-row">
+            <button class="mic-btn" id="micBtn" onclick="toggleSpeechInput()" title="Ovozdan matn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="2" width="6" height="11" rx="3"/>
+                <path d="M5 10a7 7 0 0014 0"/>
+                <line x1="12" y1="21" x2="12" y2="17"/>
+                <line x1="9" y1="21" x2="15" y2="21"/>
+              </svg>
+            </button>
+            <button class="sndbtn" id="sndbtn" onclick="sendMsg()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
         </div>
         <div class="infoot">
           <span class="hint">Enter → yuborish · Shift+Enter → yangi qator</span>
@@ -1497,11 +1530,26 @@ function confirmClear(){openConf('Tozalash','Barcha suhbatlar va sozlamalar o\'c
 function renderSR(q){const el=document.getElementById('srchRes');if(!q){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Qidirish uchun yozing...</div>';return;}const res=chats.filter(c=>c.title.toLowerCase().includes(q.toLowerCase())||c.msgs.some(m=>m.content.toLowerCase().includes(q.toLowerCase())));if(!res.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Topilmadi</div>';return;}el.innerHTML=res.map(c=>{const match=c.msgs.find(m=>m.content.toLowerCase().includes(q.toLowerCase()));const prev=match?match.content.slice(0,80)+'…':'';return `<div class="sri" onclick="loadChat('${c.id}');cm('srchM')"><div class="srtt">${esc(c.title)}</div>${prev?`<div class="srpv">${esc(prev)}</div>`:''}<div class="srdt">${new Date(c.created).toLocaleDateString('uz-UZ')}</div></div>`;}).join('');}
 
 // ─── UI HELPERS ───
-function setLoad(s){loading=s;const b=document.getElementById('sndbtn');b.disabled=s;b.classList.toggle('loading',s);b.innerHTML=s?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>':'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';}
+function setLoad(s){
+  loading = s;
+  var b = document.getElementById('sndbtn');
+  if(!b) return;
+  b.disabled = s;
+  b.classList.toggle('loading', s);
+  b.innerHTML = s
+    ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>'
+    : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+}
+
 function scrollBot(){const a=document.getElementById('msgsArea');requestAnimationFrame(()=>a.scrollTop=a.scrollHeight);}
 function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,200)+'px';}
 function ucc(n){document.getElementById('charC').textContent=n>50?n:'';}
-function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!loading)sendMsg();}}
+function hk(e){
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    if(!loading) sendMsg();
+  }
+}
 function toast(msg){const t=document.getElementById('toast');document.getElementById('toastM').textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2600);}
 function showErr(msg){document.getElementById('errM').textContent=msg;document.getElementById('errB').style.display='flex';}
 function hideErr(){document.getElementById('errB').style.display='none';}
@@ -1801,46 +1849,116 @@ function closeFileViewer(){
   if(audio){ audio.pause(); audio.currentTime=0; }
 }
 
-// Close on backdrop click
-document.getElementById('fileViewer').addEventListener('click', function(e){
-  if(e.target === this) closeFileViewer();
+// Close on backdrop click and Escape
+document.addEventListener('click', function(e){
+  var fv = document.getElementById('fileViewer');
+  if(fv && e.target === fv) closeFileViewer();
 });
-// Close on Escape
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape') closeFileViewer();
 });
 
-// ─── SWIPE TO OPEN SIDEBAR ───────────────────────────────────────────
+// ─── SWIPE SIDEBAR ───────────────────────────────────────────────────
 (function(){
-  var touchStartX = 0;
-  var touchStartY = 0;
-  var EDGE_ZONE   = 30;  // px from left edge
-  var MIN_SWIPE   = 60;  // min px to trigger
+  var txStart = 0, tyStart = 0, txCur = 0;
+  var MIN_SWIPE = 55;
+  var tracking  = false;
 
   document.addEventListener('touchstart', function(e){
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+    txStart = e.touches[0].clientX;
+    tyStart = e.touches[0].clientY;
+    txCur   = txStart;
+    tracking = true;
+  }, {passive: true});
+
+  document.addEventListener('touchmove', function(e){
+    if(!tracking) return;
+    txCur = e.touches[0].clientX;
   }, {passive: true});
 
   document.addEventListener('touchend', function(e){
-    var dx = e.changedTouches[0].clientX - touchStartX;
-    var dy = e.changedTouches[0].clientY - touchStartY;
+    if(!tracking) return;
+    tracking = false;
+    var dx    = e.changedTouches[0].clientX - txStart;
+    var dy    = e.changedTouches[0].clientY - tyStart;
     var absDy = Math.abs(dy);
-
-    // Swipe right from left edge — open sidebar
-    if(!sbOpen && touchStartX <= EDGE_ZONE && dx > MIN_SWIPE && absDy < 80){
+    var absDx = Math.abs(dx);
+    if(absDx < MIN_SWIPE || absDy > absDx * 0.8) return;
+    var sb = document.getElementById('sb');
+    if(dx > 0 && !sbOpen){
+      // Swipe right — open
       sbOpen = true;
-      document.getElementById('sb').classList.remove('collapsed');
+      sb.classList.remove('collapsed');
       document.body.classList.remove('sb-collapsed');
-    }
-    // Swipe left — close sidebar
-    else if(sbOpen && dx < -MIN_SWIPE && absDy < 80){
+    } else if(dx < 0 && sbOpen){
+      // Swipe left — close
       sbOpen = false;
-      document.getElementById('sb').classList.add('collapsed');
+      sb.classList.add('collapsed');
       document.body.classList.add('sb-collapsed');
     }
   }, {passive: true});
 })();
+
+// ─── DICTATE (Speech to Text) ────────────────────────────────────────
+// toggleSpeechInput: mic icon triggers speech-to-text (Web Speech API)
+function toggleSpeechInput(){
+  var btn = document.getElementById('micBtn');
+  if(!btn) return;
+
+  // Use Web Speech API (Chrome/Edge supported)
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    toast("Bu brauzer ovoz tanishni qollab-quvvatlamaydi");
+    return;
+  }
+
+  if(window._speechRec && window._speechActive){
+    window._speechRec.stop();
+    return;
+  }
+
+  var rec = new SR();
+  window._speechRec    = rec;
+  window._speechActive = true;
+  rec.lang             = 'uz-UZ';
+  rec.interimResults   = true;
+  rec.continuous       = false;
+
+  btn.classList.add('recording');
+
+  rec.onresult = function(e){
+    var transcript = '';
+    for(var i = e.resultIndex; i < e.results.length; i++){
+      transcript += e.results[i][0].transcript;
+    }
+    var inp = document.getElementById('chatIn');
+    if(inp){
+      inp.value = transcript;
+      ar(inp);
+      ucc(inp.value.length);
+    }
+  };
+
+  rec.onerror = function(e){
+    toast("Ovoz xatosi: " + e.error);
+    btn.classList.remove('recording');
+    window._speechActive = false;
+  };
+
+  rec.onend = function(){
+    btn.classList.remove('recording');
+    window._speechActive = false;
+    // Auto-send if we got text
+    var inp = document.getElementById('chatIn');
+    if(inp && inp.value.trim().length > 0){
+      setTimeout(sendMsg, 300);
+    }
+  };
+
+  rec.start();
+}
+
+
 </script>
 
 <!-- FILE VIEWER MODAL -->
