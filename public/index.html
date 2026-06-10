@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz" data-theme="light">
 <head>
-  <link rel="icon" type="x-icon" href="logogr.png"> 
+  <link rel="icon" type="x-icon" href="logogr.png">
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Greets — AI Chat</title>
@@ -59,8 +59,8 @@ html,body{height:100%;}
 body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;transition:background var(--tr),color var(--tr);}
 
 /* SIDEBAR */
-.sidebar{width:var(--sw);min-width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width var(--tr),min-width var(--tr);z-index:10;}
-.sidebar.collapsed{width:0;min-width:0;border-right:none;}
+.sidebar{width:var(--sw);min-width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .22s cubic-bezier(.4,0,.2,1),min-width .22s cubic-bezier(.4,0,.2,1);z-index:10;visibility:visible;opacity:1;}
+.sidebar.collapsed{width:0;min-width:0;border-right:none;visibility:hidden;}
 .sb-top{padding:10px 10px 6px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
 .logo-img{width:30px;height:30px;border-radius:7px;object-fit:cover;flex-shrink:0;}
@@ -370,6 +370,20 @@ body.sb-collapsed .tgl-outer{display:flex;}
   .mrow.ai{padding-right:40px;}
 }
 
+/* ─── MOBILE SIDEBAR BACKDROP ──────────────────────────── */
+.sb-backdrop{
+  display:none;
+  position:fixed;inset:0;
+  z-index:9;
+  background:rgba(0,0,0,.32);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  animation:bdIn .18s ease;
+}
+@keyframes bdIn{from{opacity:0}to{opacity:1}}
+body.sb-open-mobile .sb-backdrop{display:block;}
+body.sb-open-mobile .sidebar{z-index:10;}
+
 /* ─── GOOGLE AUTH ─────────────────────────────────────────────────────── */
 .google-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--rsm);font-family:'Geist',sans-serif;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;transition:background var(--tr);margin-bottom:10px;}
 .google-btn:hover{background:var(--surf);}
@@ -553,6 +567,32 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .sndbtn:hover{opacity:.82;}
 .sndbtn:disabled{background:var(--border2);color:var(--text3);cursor:not-allowed;opacity:1;}
 .sndbtn.loading svg{animation:spin .8s linear infinite;}
+
+/* ─── CHAT ITEM CONTEXT MENU ───────────────────────────────── */
+.hi-dots{opacity:0.5;transition:opacity .15s;}
+.hi:hover .hi-dots{opacity:1;}
+.hi.active .hi-dots{opacity:1;}
+.chat-ctx-menu{
+  position:fixed;
+  min-width:160px;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  box-shadow:0 8px 28px rgba(0,0,0,.14);
+  z-index:400;
+  overflow:hidden;
+  animation:dIn .12s ease;
+}
+.ctx-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 14px;cursor:pointer;
+  font-size:13px;color:var(--text);
+  transition:background var(--tr);
+}
+.ctx-item:hover{background:var(--surf);}
+.ctx-item.pinned-ctx{color:var(--accent);}
+.ctx-item.danger{color:var(--danger);}
+.ctx-item.danger:hover{background:rgba(239,68,68,.06);}
 </style>
 </head>
 <body class="sb-collapsed">
@@ -569,6 +609,7 @@ body.sb-collapsed .tgl-outer{display:flex;}
 </div>
 
 
+<div class="sb-backdrop" id="sbBackdrop" onclick="toggleSB()"></div>
 <aside class="sidebar collapsed" id="sb">
   <div class="sb-top">
     <a class="logo" href="#">
@@ -956,8 +997,21 @@ function fmtBytes(b){if(b<1024)return b+'B';if(b<1024*1024)return (b/1024).toFix
 // ─── SIDEBAR ───
 function toggleSB(){
   sbOpen=!sbOpen;
-  document.getElementById('sb').classList.toggle('collapsed',!sbOpen);
+  var sb=document.getElementById('sb');
+  if(sbOpen){
+    // Restore visibility before animation starts
+    sb.style.visibility='visible';
+    sb.classList.remove('collapsed');
+  } else {
+    sb.classList.add('collapsed');
+    // Hide after transition ends
+    setTimeout(function(){ if(!sbOpen) sb.style.visibility=''; }, 220);
+  }
   document.body.classList.toggle('sb-collapsed',!sbOpen);
+  // Mobile backdrop
+  if(window.innerWidth<=640){
+    document.body.classList.toggle('sb-open-mobile', sbOpen);
+  }
 }
 
 // ─── MORE MENU ───
@@ -1137,11 +1191,15 @@ function oClick(e){
   const sb=document.getElementById('sb');
   const tglBtn=document.querySelector('.tgl-outer');
   const sbiBtn=document.querySelector('.sbi');
+  const bdBtn=document.getElementById('sbBackdrop');
   const clickedToggle=(tglBtn&&tglBtn.contains(e.target))||(sbiBtn&&sbiBtn.contains(e.target));
-  if(sbOpen && !sb.contains(e.target) && !clickedToggle){
+  const clickedBackdrop=(bdBtn&&bdBtn.contains(e.target));
+  // PC da sidebar faqat toggle tugmasi bilan yopiladi
+  if(window.innerWidth<=640 && sbOpen && !sb.contains(e.target) && !clickedToggle && !clickedBackdrop){
     sbOpen=false;
+    sb.style.visibility='';
     sb.classList.add('collapsed');
-    document.body.classList.add('sb-collapsed');
+    document.body.classList.remove('sb-collapsed','sb-open-mobile');
   }
 }
 
@@ -1150,8 +1208,23 @@ function newChat(){
   const cur=gact();
   if(!cur||cur.msgs.length>0){const c={id:gid(),title:'Yangi suhbat',model:prov,msgs:[],created:new Date().toISOString()};chats.unshift(c);saveCh();actId=c.id;}
   renderHist();renderWelcome();hideErr();
+  // Mobile: close sidebar after new chat
+  if(window.innerWidth<=640 && sbOpen){
+    sbOpen=false;
+    document.getElementById('sb').classList.add('collapsed');
+    document.body.classList.remove('sb-collapsed','sb-open-mobile');
+  }
 }
-function loadChat(id){const c=chats.find(x=>x.id===id);if(!c)return;actId=id;renderHist();renderAllMsgs(c);}
+function loadChat(id){
+  const c=chats.find(x=>x.id===id);if(!c)return;
+  actId=id;renderHist();renderAllMsgs(c);
+  // Mobile: close sidebar after selecting chat
+  if(window.innerWidth<=640 && sbOpen){
+    sbOpen=false;
+    document.getElementById('sb').classList.add('collapsed');
+    document.body.classList.remove('sb-collapsed','sb-open-mobile');
+  }
+}
 function renderAllMsgs(chat){
   const a=document.getElementById('msgsArea');a.innerHTML='';
   if(!chat.msgs.length){renderWelcome();return;}
@@ -1246,14 +1319,8 @@ function buildHistItem(c, isPinned){
     <span class="hit">${esc(c.title)}</span>
     ${projTag}
     <div class="hiacts">
-      <button class="hibtn${isPinned?' pinned':''}" title="${isPinned?'Mahkamlamni olib tashlash':'Mahkamlash'}" onclick="quickPin('${c.id}',event)">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="${isPinned?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </button>
-      <button class="hibtn" onclick="doShare('${c.id}',event)">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      </button>
-      <button class="hibtn del" onclick="delChat('${c.id}',event)">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+      <button class="hibtn hi-dots" onclick="showChatMenu('${c.id}',event)" title="Amallar">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg>
       </button>
     </div>`;
   return el;
@@ -1890,11 +1957,13 @@ document.addEventListener('keydown', function(e){
       sbOpen = true;
       sb.classList.remove('collapsed');
       document.body.classList.remove('sb-collapsed');
-    } else if(dx < 0 && sbOpen){
-      // Swipe left — close
+      if(window.innerWidth<=640) document.body.classList.add('sb-open-mobile');
+    } else if(dx < 0 && sbOpen && window.innerWidth<=640){
       sbOpen = false;
+      sb.style.visibility = '';
       sb.classList.add('collapsed');
       document.body.classList.add('sb-collapsed');
+      document.body.classList.remove('sb-open-mobile');
     }
   }, {passive: true});
 })();
@@ -1917,12 +1986,41 @@ function toggleSpeechInput(){
     return;
   }
 
+  // Detect language from browser / last input
+  var detectedLang = 'uz-UZ';
+  var existing = document.getElementById('chatIn').value.trim();
+  if(existing){
+    // Simple heuristic: cyrillic heavy = ru, latin = en, else uz
+    var cyr = (existing.match(/[а-яёА-ЯЁ]/g)||[]).length;
+    var lat = (existing.match(/[a-zA-Z]/g)||[]).length;
+    var uzLat = (existing.match(/[oOgGuU]'|[oO]'|sh|ch/g)||[]).length;
+    if(cyr > lat && cyr > 2) detectedLang = 'ru-RU';
+    else if(lat > 3 && uzLat < 2) detectedLang = 'en-US';
+    else detectedLang = 'uz-UZ';
+  } else {
+    // Use browser language as hint
+    var bl = (navigator.language||'').toLowerCase();
+    if(bl.startsWith('ru')) detectedLang = 'ru-RU';
+    else if(bl.startsWith('en')) detectedLang = 'en-US';
+    else detectedLang = 'uz-UZ';
+  }
+
+  // Try with detected lang; fallback cycle: uz -> en -> ru
+  var langCycle = ['uz-UZ', 'en-US', 'ru-RU'];
+  var langIdx = langCycle.indexOf(detectedLang);
+  if(langIdx < 0) langIdx = 0;
+
   var rec = new SR();
   window._speechRec    = rec;
   window._speechActive = true;
   rec.lang             = 'uz-UZ';
+  rec.lang             = langCycle[langIdx];
   rec.interimResults   = true;
   rec.continuous       = false;
+
+  // Show current language on mic button tooltip
+  var langLabels = {'uz-UZ':'UZ','en-US':'EN','ru-RU':'RU'};
+  btn.title = 'Dictate (' + langLabels[rec.lang] + ') - long press to switch';
 
   btn.classList.add('recording');
 
@@ -1940,7 +2038,13 @@ function toggleSpeechInput(){
   };
 
   rec.onerror = function(e){
-    toast("Ovoz xatosi: " + e.error);
+    if(e.error === 'no-speech' || e.error === 'language-not-supported'){
+      // Try next language in cycle
+      langIdx = (langIdx + 1) % langCycle.length;
+      btn.title = 'Dictate (' + langLabels[langCycle[langIdx]] + ')';
+    } else {
+      toast("Ovoz xatosi: " + e.error);
+    }
     btn.classList.remove('recording');
     window._speechActive = false;
   };
@@ -1948,7 +2052,7 @@ function toggleSpeechInput(){
   rec.onend = function(){
     btn.classList.remove('recording');
     window._speechActive = false;
-    // Auto-send if we got text
+        // Auto-send if we got text
     var inp = document.getElementById('chatIn');
     if(inp && inp.value.trim().length > 0){
       setTimeout(sendMsg, 300);
@@ -1959,6 +2063,85 @@ function toggleSpeechInput(){
 }
 
 
+
+// ─── CHAT CONTEXT MENU ───────────────────────────────────────────────
+var _ctxMenuId = null;
+
+function showChatMenu(chatId, e){
+  e.stopPropagation();
+  closeChatMenu();
+  _ctxMenuId = chatId;
+
+  var isPinned = pinnedIds.includes(chatId);
+
+  var menu = document.createElement('div');
+  menu.className = 'chat-ctx-menu';
+  menu.id = 'chatCtxMenu';
+  menu.innerHTML =
+    '<div class="ctx-item' + (isPinned?' pinned-ctx':'') + '" onclick="ctxPin()">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="' + (isPinned?'currentColor':'none') + '" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>' +
+      (isPinned ? 'Mahkamlamni olib tashlash' : 'Mahkamlash') +
+    '</div>' +
+    '<div class="ctx-item" onclick="ctxShare()">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+      'Ulashish' +
+    '</div>' +
+    '<div class="ctx-item danger" onclick="ctxDelete()">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>' +
+      "O'chirish" +
+    '</div>';
+
+  document.body.appendChild(menu);
+
+  // Position near click
+  var x = e.clientX, y = e.clientY;
+  var mw = 168, mh = 110;
+  if(x + mw > window.innerWidth)  x = window.innerWidth - mw - 8;
+  if(y + mh > window.innerHeight) y = y - mh;
+  menu.style.left = x + 'px';
+  menu.style.top  = y + 'px';
+}
+
+function closeChatMenu(){
+  var m = document.getElementById('chatCtxMenu');
+  if(m) m.remove();
+  _ctxMenuId = null;
+}
+
+function ctxPin(){
+  if(!_ctxMenuId) return;
+  var id = _ctxMenuId;
+  closeChatMenu();
+  if(pinnedIds.includes(id)){
+    pinnedIds = pinnedIds.filter(function(p){return p!==id;});
+    toast('Mahkamlash olib tashlandi');
+  } else {
+    pinnedIds.unshift(id);
+    toast('Mahkamlandi');
+  }
+  savePinned(); renderHist();
+  if(typeof saveToFirestore==='function') saveToFirestore();
+}
+
+function ctxShare(){
+  if(!_ctxMenuId) return;
+  var id = _ctxMenuId;
+  closeChatMenu();
+  doShare(id, null);
+}
+
+function ctxDelete(){
+  if(!_ctxMenuId) return;
+  var id = _ctxMenuId;
+  closeChatMenu();
+  delChat(id, null);
+}
+
+// Close menu on any click outside
+document.addEventListener('click', function(e){
+  var m = document.getElementById('chatCtxMenu');
+  if(m && !m.contains(e.target)) closeChatMenu();
+});
 </script>
 
 <!-- FILE VIEWER MODAL -->
