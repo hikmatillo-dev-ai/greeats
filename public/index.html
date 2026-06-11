@@ -60,7 +60,11 @@ body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);displ
 
 /* SIDEBAR */
 .sidebar{width:var(--sw);min-width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .22s cubic-bezier(.4,0,.2,1),min-width .22s cubic-bezier(.4,0,.2,1);z-index:10;visibility:visible;opacity:1;}
-.sidebar.collapsed{width:0;min-width:0;border-right:none;visibility:hidden;}
+.sidebar.collapsed{width:0;min-width:0;border-right:none;}
+@media(max-width:640px){
+  .sidebar{transform:translateX(0);transition:transform .25s cubic-bezier(.4,0,.2,1),visibility .25s;}
+  .sidebar.collapsed{width:var(--sw);min-width:var(--sw);transform:translateX(-100%);visibility:hidden;}
+}
 .sb-top{padding:10px 10px 6px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
 .logo-img{width:30px;height:30px;border-radius:7px;object-fit:cover;flex-shrink:0;}
@@ -117,6 +121,9 @@ body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);displ
 .mbtn .chev{color:var(--text3);transition:transform .2s;}
 .mbtn.open .chev{transform:rotate(180deg);}
 .mdrop{position:absolute;top:calc(100% + 6px);left:0;min-width:310px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);box-shadow:0 10px 40px rgba(0,0,0,.13);z-index:300;overflow:hidden;display:none;}
+@media(max-width:640px){
+  .mdrop{left:0;right:auto;min-width:calc(100vw - 28px);max-width:calc(100vw - 28px);}
+}
 .mdrop.open{display:block;animation:dIn .14s ease;}
 @keyframes dIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 .mopt{display:flex;align-items:center;padding:11px 14px;cursor:pointer;gap:11px;transition:background var(--tr);}
@@ -280,6 +287,9 @@ body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);displ
 .tgl-outer{display:none;}
 body.sb-collapsed .tgl-outer{display:flex;}
 .tgl-inner{display:flex;}
+@media(max-width:640px){
+  .tgl-outer{display:flex !important;}
+}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--text);color:var(--bg);border-radius:var(--r);padding:9px 15px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:1000;opacity:0;pointer-events:none;transition:all .22s ease;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -593,6 +603,48 @@ body.sb-open-mobile .sidebar{z-index:10;}
 .ctx-item.pinned-ctx{color:var(--accent);}
 .ctx-item.danger{color:var(--danger);}
 .ctx-item.danger:hover{background:rgba(239,68,68,.06);}
+
+/* ─── PROJECTS SECTION ─────────────────────────────── */
+.proj-toggle{user-select:none;}
+.proj-item{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 9px 5px 22px;
+  border-radius:var(--rsm);cursor:pointer;
+  font-size:12.5px;color:var(--text2);
+  transition:background var(--tr),color var(--tr);
+  white-space:nowrap;
+}
+.proj-item:hover{background:var(--surf);color:var(--text);}
+.proj-item.active-proj{background:var(--surf2);color:var(--text);}
+.proj-item-ic{font-size:13px;flex-shrink:0;}
+.proj-item-manage{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 9px 5px 22px;
+  border-radius:var(--rsm);cursor:pointer;
+  font-size:12px;color:var(--text3);
+  transition:background var(--tr),color var(--tr);
+}
+.proj-item-manage:hover{background:var(--surf);color:var(--text2);}
+
+/* ─── SCROLL TO BOTTOM ─────────────────────────────── */
+#scrollBotBtn{
+  position:absolute;
+  bottom:16px;right:16px;
+  width:34px;height:34px;
+  border-radius:50%;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  box-shadow:0 3px 12px rgba(0,0,0,.12);
+  color:var(--text2);
+  cursor:pointer;
+  display:none;
+  align-items:center;justify-content:center;
+  transition:opacity .2s,transform .2s;
+  z-index:50;
+}
+#scrollBotBtn.visible{display:flex;}
+#scrollBotBtn:hover{background:var(--surf);color:var(--text);transform:translateY(-1px);}
+.msgs-wrap{position:relative;flex:1;overflow:hidden;display:flex;flex-direction:column;}
 </style>
 </head>
 <body class="sb-collapsed">
@@ -633,10 +685,12 @@ body.sb-open-mobile .sidebar{z-index:10;}
     </div>
   </div>
   <div class="sb-nav">
-    <div class="nav-item" onclick="om('projM')">
+    <div class="nav-item proj-toggle" id="projToggle" onclick="toggleProjSection()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-      Loyihalar
+      <span style="flex:1">Loyihalar</span>
+      <svg id="projChev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
+    <div id="projSection" style="display:none;padding:2px 0 4px 0"></div>
   </div>
   <div class="divider"></div>
   <div class="hist-wrap" id="histWrap"></div>
@@ -699,7 +753,12 @@ body.sb-open-mobile .sidebar{z-index:10;}
     </div>
   </header>
 
-  <div class="msgs" id="msgsArea"></div>
+  <div class="msgs-wrap">
+    <div class="msgs" id="msgsArea"></div>
+    <button id="scrollBotBtn" onclick="scrollBot()" title="Eng pastga">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
 
   <div class="inwrap">
     <div class="ininner">
@@ -999,17 +1058,18 @@ function toggleSB(){
   sbOpen=!sbOpen;
   var sb=document.getElementById('sb');
   if(sbOpen){
-    // Restore visibility before animation starts
+        // Restore visibility before animation starts
     sb.style.visibility='visible';
     sb.classList.remove('collapsed');
   } else {
     sb.classList.add('collapsed');
-    // Hide after transition ends
-    setTimeout(function(){ if(!sbOpen) sb.style.visibility=''; }, 220);
+    setTimeout(function(){ if(!sbOpen) sb.style.visibility=''; }, 260);
   }
-  document.body.classList.toggle('sb-collapsed',!sbOpen);
-  // Mobile backdrop
-  if(window.innerWidth<=640){
+  // On desktop: toggle sb-collapsed for topbar toggle button
+  // On mobile: sidebar is always overlay, always show tgl-outer via CSS
+  if(window.innerWidth>640){
+    document.body.classList.toggle('sb-collapsed',!sbOpen);
+  } else {
     document.body.classList.toggle('sb-open-mobile', sbOpen);
   }
 }
@@ -1248,7 +1308,9 @@ function confirmDel(){if(!actId)return toast('Faol suhbat yo\'q');delChat(actId,
 function renderHist(q){
   const w=document.getElementById('histWrap');w.innerHTML='';
   // filter archived (hidden by default unless searching) and apply search
+  // Apply project filter if active
   let list=chats.filter(c=>!archivedIds.includes(c.id));
+  if(_filterProjId) list=list.filter(c=>chatProjects[c.id]===_filterProjId);
   if(q){
     const ql=q.toLowerCase();
     list=chats.filter(c=>c.title.toLowerCase().includes(ql)||c.msgs.some(m=>m.content.toLowerCase().includes(ql)));
@@ -1280,32 +1342,30 @@ function renderHist(q){
     g[k].forEach(c=>w.appendChild(buildHistItem(c,false)));
   });
 
-  // Show archived count
+  // Show archived count as toggle — appended before chat list
   const arcCount=archivedIds.filter(id=>chats.find(c=>c.id===id)).length;
   if(arcCount&&!q){
     const arcEl=document.createElement('div');
-    arcEl.className='nav-item';
-    arcEl.style.marginTop='4px';
-    arcEl.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Arxivlangan (${arcCount})`;
-    arcEl.onclick=()=>showArchived();
+    arcEl.className='nav-item arc-toggle-btn';
+    arcEl.id='arcToggleBtn';
+    arcEl.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Arxivlangan ('+arcCount+')';
+    arcEl.onclick=function(){
+      var already=document.getElementById('arcSection');
+      if(already){already.remove();arcEl.classList.remove('active-item');return;}
+      arcEl.classList.add('active-item');
+      var sec=document.createElement('div');
+      sec.id='arcSection';
+      var arcChats=chats.filter(function(c){return archivedIds.includes(c.id);});
+      arcChats.forEach(function(c){ sec.appendChild(buildHistItem(c,false)); });
+      arcEl.insertAdjacentElement('afterend', sec);
+    };
     w.appendChild(arcEl);
   }
 
   const pc=document.getElementById('pjCnt');if(pc)pc.textContent=chats.length+' ta suhbat';
 }
 
-function showArchived(){
-  const w=document.getElementById('histWrap');
-  const arcChats=chats.filter(c=>archivedIds.includes(c.id));
-  if(!arcChats.length)return toast('Arxiv bo\'sh');
-  // Show archived at bottom
-  const l=document.createElement('div');l.className='hlbl';l.textContent='Arxivlangan';
-  w.appendChild(l);
-  arcChats.forEach(c=>{
-    const el=buildHistItem(c,false);
-    w.appendChild(el);
-  });
-}
+
 
 function buildHistItem(c, isPinned){
   const el=document.createElement('div');
@@ -1608,7 +1668,14 @@ function setLoad(s){
     : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 }
 
-function scrollBot(){const a=document.getElementById('msgsArea');requestAnimationFrame(()=>a.scrollTop=a.scrollHeight);}
+function scrollBot(){
+  var a=document.getElementById('msgsArea');
+  requestAnimationFrame(function(){
+    a.scrollTop=a.scrollHeight;
+    var btn=document.getElementById('scrollBotBtn');
+    if(btn) btn.classList.remove('visible');
+  });
+}
 function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,200)+'px';}
 function ucc(n){document.getElementById('charC').textContent=n>50?n:'';}
 function hk(e){
@@ -1953,7 +2020,7 @@ document.addEventListener('keydown', function(e){
     if(absDx < MIN_SWIPE || absDy > absDx * 0.8) return;
     var sb = document.getElementById('sb');
     if(dx > 0 && !sbOpen){
-      // Swipe right — open
+            // Swipe right — open
       sbOpen = true;
       sb.classList.remove('collapsed');
       document.body.classList.remove('sb-collapsed');
@@ -2013,7 +2080,6 @@ function toggleSpeechInput(){
   var rec = new SR();
   window._speechRec    = rec;
   window._speechActive = true;
-  rec.lang             = 'uz-UZ';
   rec.lang             = langCycle[langIdx];
   rec.interimResults   = true;
   rec.continuous       = false;
@@ -2052,7 +2118,7 @@ function toggleSpeechInput(){
   rec.onend = function(){
     btn.classList.remove('recording');
     window._speechActive = false;
-        // Auto-send if we got text
+          // Swipe right — open
     var inp = document.getElementById('chatIn');
     if(inp && inp.value.trim().length > 0){
       setTimeout(sendMsg, 300);
@@ -2142,6 +2208,79 @@ document.addEventListener('click', function(e){
   var m = document.getElementById('chatCtxMenu');
   if(m && !m.contains(e.target)) closeChatMenu();
 });
+
+// ─── PROJECTS COLLAPSIBLE SECTION ────────────────────────────────────
+var _projOpen = false;
+function toggleProjSection(){
+  _projOpen = !_projOpen;
+  var sec   = document.getElementById('projSection');
+  var chev  = document.getElementById('projChev');
+  if(!sec) return;
+  if(_projOpen){
+    sec.style.display = 'block';
+    if(chev) chev.style.transform = 'rotate(180deg)';
+    renderProjSection();
+  } else {
+    sec.style.display = 'none';
+    if(chev) chev.style.transform = '';
+  }
+}
+
+function renderProjSection(){
+  var sec = document.getElementById('projSection');
+  if(!sec || !_projOpen) return;
+  sec.innerHTML = '';
+  projects.forEach(function(p){
+    var cnt = chats.filter(function(c){return chatProjects[c.id]===p.id;}).length;
+    var item = document.createElement('div');
+    item.className = 'proj-item';
+    item.innerHTML =
+      '<span class="proj-item-ic">' + p.emoji + '</span>' +
+      '<span style="flex:1;overflow:hidden;text-overflow:ellipsis">' + esc(p.name) + '</span>' +
+      '<span style="font-size:10px;color:var(--text3)">' + cnt + '</span>';
+    item.onclick = function(){
+      // Filter chats by project
+      filterByProject(p.id);
+    };
+    sec.appendChild(item);
+  });
+  // Manage link
+  var manage = document.createElement('div');
+  manage.className = 'proj-item-manage';
+  manage.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2m0 18v-2m-6.36-3.64l1.41-1.41m10.31 0l1.41 1.41M2 12h2m18 0h-2"/></svg> Loyihalarni boshqarish';
+  manage.onclick = function(){ om('projM'); };
+  sec.appendChild(manage);
+}
+
+var _filterProjId = null;
+function filterByProject(projId){
+  _filterProjId = _filterProjId===projId ? null : projId;
+  renderHist();
+  // Highlight active project
+  var sec = document.getElementById('projSection');
+  if(sec){
+    sec.querySelectorAll('.proj-item').forEach(function(el,i){
+      el.classList.toggle('active-proj', projects[i]&&projects[i].id===_filterProjId);
+    });
+  }
+}
+
+// ─── SCROLL TO BOTTOM BUTTON ─────────────────────────────────────────
+(function(){
+  var msgsEl = document.getElementById('msgsArea');
+  if(!msgsEl) return;
+  function checkScroll(){
+    var btn = document.getElementById('scrollBotBtn');
+    if(!btn) return;
+    var distFromBottom = msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight;
+    if(distFromBottom > 120){
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }
+  msgsEl.addEventListener('scroll', checkScroll, {passive:true});
+})();
 </script>
 
 <!-- FILE VIEWER MODAL -->
