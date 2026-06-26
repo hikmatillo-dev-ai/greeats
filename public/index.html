@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="uz" data-theme="light">
 <head>
-  <link rel="icon" type="x-icon" href="logogr.png">
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Greets — AI Chat</title>
 <!-- Firebase SDK -->
 <script type="module">
-  import { initializeApp }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getDatabase, ref, set, get }
-    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
   const firebaseConfig = {
     apiKey:            "AIzaSyCl6M0i4A9g7WRrnme-z_XdYhiRoHeXic8",
@@ -32,7 +31,7 @@
 
   onAuthStateChanged(auth, user => {
     window._fbUser = user || null;
-    if (typeof window._onFbAuth === 'function') {
+    if (typeof window._onFbAuth === "function") {
       window._onFbAuth(user);
     } else {
       // Main script yuklanmagan — navbatga qo'yamiz
@@ -56,7 +55,7 @@
   --text:#ececec; --text2:#ababab; --text3:#666;
 }
 html,body{height:100%;}
-body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;transition:background var(--tr),color var(--tr);}
+body{font-family:"Geist",sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;transition:background var(--tr),color var(--tr);}
 
 /* SIDEBAR */
 .sidebar{width:var(--sw);min-width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .22s cubic-bezier(.4,0,.2,1),min-width .22s cubic-bezier(.4,0,.2,1);z-index:10;visibility:visible;opacity:1;}
@@ -72,12 +71,12 @@ body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);displ
 .logo-name{font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;}
 .sbi{width:30px;height:30px;border-radius:6px;background:none;border:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--tr),color var(--tr);flex-shrink:0;}
 .sbi:hover{background:var(--surf);color:var(--text);}
-.new-btn{margin:4px 10px 6px;padding:8px 12px;background:none;border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background var(--tr);white-space:nowrap;}
+.new-btn{margin:4px 10px 6px;padding:8px 12px;background:none;border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:"Geist",sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background var(--tr);white-space:nowrap;}
 .new-btn:hover{background:var(--surf);}
 .sb-search{padding:0 10px 6px;flex-shrink:0;}
 .sw{display:flex;align-items:center;gap:7px;background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:6px 10px;}
 .sw svg{color:var(--text3);flex-shrink:0;}
-.sw input{flex:1;background:none;border:none;outline:none;font-family:'Geist',sans-serif;font-size:13px;color:var(--text);min-width:0;}
+.sw input{flex:1;background:none;border:none;outline:none;font-family:"Geist",sans-serif;font-size:13px;color:var(--text);min-width:0;}
 .sw input::placeholder{color:var(--text3);}
 .sb-nav{padding:2px 10px;flex-shrink:0;}
 .nav-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:var(--rsm);font-size:13.5px;color:var(--text2);cursor:pointer;transition:background var(--tr),color var(--tr);white-space:nowrap;}
@@ -116,7 +115,7 @@ body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);displ
 
 /* Model dropdown */
 .mwrap{position:relative;}
-.mbtn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--rsm);background:none;border:none;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:background var(--tr);}
+.mbtn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--rsm);background:none;border:none;font-family:"Geist",sans-serif;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:background var(--tr);}
 .mbtn:hover{background:var(--surf);}
 .mbtn .chev{color:var(--text3);transition:transform .2s;}
 .mbtn.open .chev{transform:rotate(180deg);}
@@ -328,7 +327,7 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .btn-d:hover{background:rgba(239,68,68,.14);}
 .btn-p{padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--rsm);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
 .btn-p:hover{background:var(--accent2);}
-.btn-s{padding:7px 14px;background:var(--surf);color:var(--text);border:1px solid var(--border2);border-radius:var(--rsm);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.btn-s{padding:7px 14px;background:var(--surf);color:var(--text);border:1px solid var(--border2);border-radius:var(--rsm);font-family:"Geist",sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
 .btn-s:hover{background:var(--surf2);}
 
 /* Profile */
@@ -336,11 +335,11 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .pavbig{width:52px;height:52px;border-radius:50%;background:var(--surf2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:var(--text2);flex-shrink:0;}
 .pfield{margin-bottom:13px;}
 .plbl{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
-.pin{width:100%;background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:9px 13px;font-family:'Geist',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
+.pin{width:100%;background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:9px 13px;font-family:"Geist",sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
 .pin:focus{border-color:var(--accent);}
 
 /* Share */
-.sharebox{background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:11px 13px;font-family:'Geist Mono',monospace;font-size:12px;color:var(--text2);word-break:break-all;margin-bottom:12px;min-height:44px;display:flex;align-items:center;}
+.sharebox{background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:11px 13px;font-family:"Geist Mono",monospace;font-size:12px;color:var(--text2);word-break:break-all;margin-bottom:12px;min-height:44px;display:flex;align-items:center;}
 
 /* Confirm */
 .confmsg{font-size:14px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
@@ -353,7 +352,7 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .srpv{font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .srdt{font-size:11px;color:var(--text3);margin-top:2px;}
 .infobox{padding:11px 13px;background:var(--surf);border-radius:var(--rsm);font-size:12.5px;color:var(--text3);line-height:1.6;}
-.infobox code{background:var(--bg2);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Geist Mono',monospace;}
+.infobox code{background:var(--bg2);padding:1px 5px;border-radius:3px;font-size:12px;font-family:"Geist Mono",monospace;}
 
 /* PROJECTS CRUD — FIX 3 */
 .pj-list{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
@@ -367,7 +366,7 @@ body.sb-collapsed .tgl-outer{display:flex;}
 .pj-act-btn:hover{background:var(--border2);color:var(--text);}
 .pj-act-btn.del-pj:hover{color:var(--danger);}
 .pj-new-row{display:flex;gap:7px;margin-top:10px;}
-.pj-new-inp{flex:1;background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:7px 11px;font-family:'Geist',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+.pj-new-inp{flex:1;background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:7px 11px;font-family:"Geist",sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
 .pj-new-inp:focus{border-color:var(--accent);}
 .pj-emoji-sel{background:var(--surf);border:1px solid var(--border);border-radius:var(--rsm);padding:7px 9px;font-size:15px;cursor:pointer;outline:none;}
 
@@ -395,10 +394,10 @@ body.sb-open-mobile .sb-backdrop{display:block;}
 body.sb-open-mobile .sidebar{z-index:10;}
 
 /* ─── GOOGLE AUTH ─────────────────────────────────────────────────────── */
-.google-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--rsm);font-family:'Geist',sans-serif;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;transition:background var(--tr);margin-bottom:10px;}
+.google-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--rsm);font-family:"Geist",sans-serif;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;transition:background var(--tr);margin-bottom:10px;}
 .google-btn:hover{background:var(--surf);}
 .auth-divider{font-size:12px;color:var(--text3);margin:12px 0;display:flex;align-items:center;gap:10px;}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.auth-divider::before,.auth-divider::after{content:"";flex:1;height:1px;background:var(--border);}
 .auth-info{padding:10px 12px;background:rgba(16,163,127,.06);border:1px solid rgba(16,163,127,.15);border-radius:var(--rsm);font-size:12.5px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
 .auth-photo{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 
@@ -420,7 +419,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
   position:relative;
 }
 .splash-logo::after{
-  content:'';
+  content:"";
   position:absolute;inset:-8px;
   border-radius:28px;
   background:radial-gradient(circle, rgba(16,163,127,.18) 0%, rgba(16,163,127,.06) 50%, transparent 70%);
@@ -511,7 +510,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
   background:var(--bg);border-radius:12px;
   overflow:auto;padding:24px 28px;
   font-size:14px;line-height:1.8;color:var(--text);
-  font-family:'Geist',sans-serif;
+  font-family:"Geist",sans-serif;
   white-space:pre-wrap;word-break:break-word;
 }
 .fv-doc-header{
@@ -645,6 +644,127 @@ body.sb-open-mobile .sidebar{z-index:10;}
 #scrollBotBtn.visible{display:flex;}
 #scrollBotBtn:hover{background:var(--surf);color:var(--text);transform:translateY(-1px);}
 .msgs-wrap{position:relative;flex:1;overflow:hidden;display:flex;flex-direction:column;}
+
+/* ─── PROJECT PAGE ─────────────────────────────────────────────────── */
+.proj-page{
+  display:none;flex:1;flex-direction:column;overflow:hidden;
+  animation:fup .2s ease;
+}
+.proj-page.active{display:flex;}
+.main.proj-mode .topbar{display:none;}
+.main.proj-mode .msgs-wrap{display:none;}
+.main.proj-mode .inwrap{display:none;}
+.main.proj-mode .proj-page{display:flex;}
+/* Show proj-page as full flex child of main */
+.proj-page{flex:1;min-height:0;}
+
+/* Project page layout */
+.pp-header{
+  padding:24px 28px 16px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  flex-shrink:0;
+}
+.pp-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--text3);
+  cursor:pointer;margin-bottom:14px;
+  transition:color var(--tr);
+  width:fit-content;
+}
+.pp-back:hover{color:var(--text2);}
+.pp-title-row{display:flex;align-items:center;gap:12px;}
+.pp-emoji{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--surf);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.pp-name{font-size:22px;font-weight:700;color:var(--text);flex:1;}
+.pp-actions{display:flex;gap:6px;}
+.pp-body{
+  flex:1;display:flex;overflow:hidden;
+}
+.pp-chats{
+  flex:1;overflow-y:auto;padding:16px 20px;
+}
+.pp-chats::-webkit-scrollbar{width:3px;}
+.pp-chats::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.pp-sidebar{
+  width:280px;min-width:280px;
+  border-left:1px solid var(--border);
+  background:var(--bg2);
+  overflow-y:auto;
+  padding:16px;
+  flex-shrink:0;
+}
+@media(max-width:640px){
+  .pp-body{flex-direction:column;}
+  .pp-sidebar{width:100%;min-width:0;border-left:none;border-top:1px solid var(--border);}
+  .pp-header{padding:16px;}
+  .pp-name{font-size:18px;}
+}
+
+/* Project chat cards */
+.pp-new-chat{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);cursor:pointer;
+  margin-bottom:12px;
+  transition:all .15s;
+}
+.pp-new-chat:hover{background:var(--surf);border-color:var(--border2);transform:translateY(-1px);}
+.pp-chat-card{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--rsm);cursor:pointer;margin-bottom:6px;
+  transition:all .15s;
+}
+.pp-chat-card:hover{background:var(--surf);border-color:var(--border2);}
+.pp-chat-title{font-size:13px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pp-chat-time{font-size:11px;color:var(--text3);flex-shrink:0;}
+.pp-empty{
+  text-align:center;padding:40px 20px;color:var(--text3);font-size:13px;
+}
+
+/* Project sidebar panel */
+.pp-panel{margin-bottom:16px;}
+.pp-panel-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--rsm) var(--rsm) 0 0;
+  cursor:pointer;
+}
+.pp-panel-hdr.no-content{border-radius:var(--rsm);}
+.pp-panel-title{font-size:13px;font-weight:600;color:var(--text);}
+.pp-panel-desc{font-size:11px;color:var(--text3);margin-top:1px;}
+.pp-panel-add{
+  width:24px;height:24px;border-radius:5px;
+  background:none;border:none;color:var(--text3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--tr),color var(--tr);
+}
+.pp-panel-add:hover{background:var(--surf);color:var(--text);}
+.pp-panel-content{
+  background:var(--bg2);border:1px solid var(--border);border-top:none;
+  border-radius:0 0 var(--rsm) var(--rsm);padding:10px 12px;
+}
+.pp-instr-area{
+  width:100%;background:none;border:none;outline:none;resize:none;
+  font-family:"Geist",sans-serif;font-size:13px;color:var(--text);
+  line-height:1.6;min-height:80px;
+}
+.pp-file-item{
+  display:flex;align-items:center;gap:8px;padding:6px 0;
+  border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);
+}
+.pp-file-item:last-child{border-bottom:none;}
+.pp-no-chats{
+  text-align:center;padding:30px 16px;color:var(--text3);font-size:13px;line-height:1.6;
+}
 </style>
 </head>
 <body class="sb-collapsed">
@@ -691,6 +811,14 @@ body.sb-open-mobile .sidebar{z-index:10;}
       <svg id="projChev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div id="projSection" style="display:none;padding:2px 0 4px 0"></div>
+    <!-- Archive toggle below Loyihalar -->
+    <div class="nav-item" id="arcNavBtn" style="display:none;margin-top:2px" onclick="toggleArchiveSection()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+      <span style="flex:1">Arxivlangan</span>
+      <span class="arc-cnt" style="font-size:11px;color:var(--text3)">(0)</span>
+      <svg id="arcChev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;flex-shrink:0;margin-left:2px"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div id="arcInlineSection" style="display:none;padding:2px 0"></div>
   </div>
   <div class="divider"></div>
   <div class="hist-wrap" id="histWrap"></div>
@@ -733,7 +861,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
         <div class="more-drop" id="moreDrop">
           <div class="more-item" onclick="moveToProjMenu()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-            Loyihaga ko'chirish
+            Loyihaga ko"chirish
           </div>
           <div class="more-item" id="pinMenuItem" onclick="pinChat()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -746,7 +874,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
           <div class="more-divider"></div>
           <div class="more-item danger" onclick="confirmDel();closeMoreMenu()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-            O'chirish
+            O"chirish
           </div>
         </div>
       </div>
@@ -758,6 +886,69 @@ body.sb-open-mobile .sidebar{z-index:10;}
     <button id="scrollBotBtn" onclick="scrollBot()" title="Eng pastga">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
+  </div>
+  <!-- PROJECT PAGE -->
+  <div class="proj-page" id="projPage">
+    <div class="pp-header">
+      <div class="pp-back" onclick="closeProjPage()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Barcha loyihalar
+      </div>
+      <div class="pp-title-row">
+        <div class="pp-emoji" id="ppEmoji">📁</div>
+        <div class="pp-name" id="ppName">Loyiha</div>
+        <div class="pp-actions">
+          <button class="ibtn" onclick="editCurrentProject()" title="Tahrirlash">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="ibtn" onclick="deleteCurrentProject()" title="O"chirish" style="color:var(--danger)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="pp-body">
+      <div class="pp-chats" id="ppChats">
+        <div class="pp-new-chat" onclick="startProjChat()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          <span style="font-size:13px;font-weight:600;color:var(--text)">Yangi suhbat boshlash</span>
+        </div>
+        <div id="ppChatList"></div>
+      </div>
+      <div class="pp-sidebar" id="ppSide">
+        <!-- Instructions panel -->
+        <div class="pp-panel">
+          <div class="pp-panel-hdr no-content" id="ppInstrHdr" onclick="toggleProjInstr()">
+            <div>
+              <div class="pp-panel-title">Ko'rsatmalar</div>
+              <div class="pp-panel-desc">AI javoblarini sozlash</div>
+            </div>
+            <button class="pp-panel-add" onclick="event.stopPropagation();toggleProjInstr()">
+              <svg id="ppInstrIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
+          <div class="pp-panel-content" id="ppInstrBody" style="display:none">
+            <textarea class="pp-instr-area" id="ppInstrTa" placeholder="Masalan: Har doim o'zbek tilida javob ber. Qisqa va aniq bo'l..." oninput="saveProjInstr()"></textarea>
+          </div>
+        </div>
+        <!-- Files panel -->
+        <div class="pp-panel">
+          <div class="pp-panel-hdr no-content" onclick="triggerProjFileInput()">
+            <div>
+              <div class="pp-panel-title">Fayllar</div>
+              <div class="pp-panel-desc">PDF, hujjat, matn</div>
+            </div>
+            <button class="pp-panel-add" onclick="event.stopPropagation();triggerProjFileInput()" title="Fayl qo'shish">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
+          <input type="file" id="projFileInput" style="display:none" multiple accept=".pdf,.txt,.md,.docx,.csv,.json" onchange="addProjFiles(event)"/>
+          <div class="pp-panel-content" id="ppFilesBody" style="display:none">
+            <div id="ppFileList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="inwrap">
@@ -865,19 +1056,19 @@ body.sb-open-mobile .sidebar{z-index:10;}
     <div class="mhdr"><span class="mhtit">Sozlamalar</span><button class="mcls" onclick="cm('settM')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="mbody">
       <div class="ssec">
-        <div class="sstit">Ko'rinish</div>
+        <div class="sstit">Ko"rinish</div>
         <div class="srow"><div><div class="slbl">Mavzu</div><div class="ssub">Interfeys rang sxemasi</div></div>
-          <select class="sel" id="thSel" onchange="applyTheme(this.value)"><option value="light">Yorug'</option><option value="dark">Qorong'i</option></select></div>
+          <select class="sel" id="thSel" onchange="applyTheme(this.value)"><option value="light">Yorug"</option><option value="dark">Qorong"i</option></select></div>
         <div class="srow"><div><div class="slbl">Til</div><div class="ssub">Interfeys tili (tez orada)</div></div>
-          <select class="sel" disabled style="opacity:.45;cursor:not-allowed"><option>O'zbekcha</option><option>Русский</option><option>English</option></select></div>
+          <select class="sel" disabled style="opacity:.45;cursor:not-allowed"><option>O"zbekcha</option><option>Русский</option><option>English</option></select></div>
       </div>
       <div class="ssec">
-        <div class="sstit">Ma'lumotlar</div>
+        <div class="sstit">Ma"lumotlar</div>
         <div class="srow"><div><div class="slbl">Import</div><div class="ssub">JS backup faylni yuklang</div></div>
           <label class="btn-s" style="cursor:pointer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import<input type="file" accept=".js,.json" style="display:none" onchange="importData(event)"></label></div>
         <div class="srow"><div><div class="slbl">Eksport</div><div class="ssub">Suhbatlarni JS formatda yuklab oling</div></div>
           <button class="btn-s" onclick="exportBak()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Eksport</button></div>
-        <div class="srow"><div><div class="slbl">Tozalash</div><div class="ssub">Barcha ma'lumotlar o'chadi</div></div>
+        <div class="srow"><div><div class="slbl">Tozalash</div><div class="ssub">Barcha ma"lumotlar o"chadi</div></div>
           <button class="btn-d" onclick="confirmClear()">Tozalash</button></div>
       </div>
       <div class="ssec">
@@ -887,7 +1078,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
         <div class="srow" style="opacity:.55"><div><div class="slbl">Claude Haiku</div><div class="ssub">Anthropic · Pullik</div></div><span class="mbadge soon">Tez orada</span></div>
         <div class="srow" style="opacity:.55"><div><div class="slbl">GPT-4o Mini</div><div class="ssub">OpenAI · Pullik</div></div><span class="mbadge soon">Tez orada</span></div>
         <div class="infobox" style="margin-top:10px">
-          💡 <strong>Claude/OpenAI qo'shish:</strong> <code>api.env</code> da kalitni kiriting. Keyin <code>server/index.js</code> → PROVIDERS ichidan <code>Tez orada</code> badge ni olib tashlang.
+          💡 <strong>Claude/OpenAI qo"shish:</strong> <code>api.env</code> da kalitni kiriting. Keyin <code>server/index.js</code> → PROVIDERS ichidan <code>Tez orada</code> badge ni olib tashlang.
         </div>
       </div>
     </div>
@@ -917,6 +1108,17 @@ body.sb-open-mobile .sidebar{z-index:10;}
           Linkni nusxalash
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Text Input Dialog (replaces prompt()) -->
+<div class="ov" id="inputM">
+  <div class="modal sm">
+    <div class="mhdr"><span class="mhtit" id="inputTit">Kiriting</span><button class="mcls" onclick="cm('inputM')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mbody">
+      <input class="pin" id="inputField" type="text" placeholder="" style="margin-bottom:14px" onkeydown="if(event.key==='Enter')inputOk()"/>
+      <div class="confacts"><button class="btn-s" onclick="cm('inputM')">Bekor</button><button class="btn-p" onclick="inputOk()">Saqlash</button></div>
     </div>
   </div>
 </div>
@@ -957,9 +1159,9 @@ body.sb-open-mobile .sidebar{z-index:10;}
           <option>📚</option><option>🌍</option><option>⚙️</option><option>🎮</option>
         </select>
         <input class="pj-new-inp" id="pjNewName" placeholder="Yangi loyiha nomi..." onkeydown="if(event.key==='Enter')addProject()"/>
-        <button class="btn-p" onclick="addProject()">Qo'shish</button>
+        <button class="btn-p" onclick="addProject()">Qo"shish</button>
       </div>
-      <div class="infobox" style="margin-top:12px">💡 Suhbatni loyihaga biriktirish uchun «Ko'proq» menyusidan «Loyihaga ko'chirish» ni tanlang.</div>
+      <div class="infobox" style="margin-top:12px">💡 Suhbatni loyihaga biriktirish uchun «Ko"proq» menyusidan «Loyihaga ko"chirish» ni tanlang.</div>
     </div>
   </div>
 </div>
@@ -967,7 +1169,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
 <!-- Move to project modal -->
 <div class="ov" id="moveProjM">
   <div class="modal sm">
-    <div class="mhdr"><span class="mhtit">Loyihaga ko'chirish</span><button class="mcls" onclick="cm('moveProjM')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mhdr"><span class="mhtit">Loyihaga ko"chirish</span><button class="mcls" onclick="cm('moveProjM')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="mbody">
       <div id="moveProjList" class="pj-list"></div>
     </div>
@@ -977,7 +1179,7 @@ body.sb-open-mobile .sidebar{z-index:10;}
 <script>
 // ─── SPLASH SCREEN ───────────────────────────────────────────────────────
 (function(){
-  const splash = document.getElementById('splashScreen');
+  const splash = document.getElementById("splashScreen");
   if(!splash) return;
   const minTime = 1400;
   const startTime = Date.now();
@@ -986,14 +1188,14 @@ body.sb-open-mobile .sidebar{z-index:10;}
     const elapsed = Date.now() - startTime;
     const delay = Math.max(0, minTime - elapsed);
     setTimeout(function(){
-      splash.classList.add('hide');
-      setTimeout(function(){ splash.style.display='none'; }, 500);
+      splash.classList.add("hide");
+      setTimeout(function(){ splash.style.display="none"; }, 500);
     }, delay);
   }
 
   function checkReady(){
-    // Internet bor va sahifa tayyor bo'lsa yashir
-    if(document.readyState === 'complete'){
+    // Internet bor va sahifa tayyor bo"lsa yashir
+    if(document.readyState === "complete"){
       hideSplash();
     } else {
       // Tayyor emas - yana kuting
@@ -1001,25 +1203,25 @@ body.sb-open-mobile .sidebar{z-index:10;}
     }
   }
 
-  // Offline bo'lsa splash davom etsin, online bo'lgach yashirsin
+  // Offline bo"lsa splash davom etsin, online bo"lgach yashirsin
   if(!navigator.onLine){
-    window.addEventListener('online', function onOnline(){
-      window.removeEventListener('online', onOnline);
+    window.addEventListener("online", function onOnline(){
+      window.removeEventListener("online", onOnline);
       setTimeout(checkReady, 500);
     });
   } else {
-    if(document.readyState === 'complete'){
+    if(document.readyState === "complete"){
       hideSplash();
     } else {
-      window.addEventListener('load', hideSplash);
+      window.addEventListener("load", hideSplash);
       setTimeout(checkReady, 4000);
     }
   }
 })();
 
 // ─── STATE ───
-const SK='greets_v3_chats', PK='greets_v3_prefs', PRK='greets_v3_profile', PIK='greets_v3_pinned', AIK='greets_v3_archived', PROJK='greets_v3_projects', CPJK='greets_v3_chat_projects';
-let chats=[], actId=null, loading=false, prov='groq', provs=[], sbOpen=false, confCb=null, editIdx=null, shareLink='';
+const SK="greets_v3_chats", PK="greets_v3_prefs", PRK="greets_v3_profile", PIK="greets_v3_pinned", AIK="greets_v3_archived", PROJK="greets_v3_projects", CPJK="greets_v3_chat_projects";
+let chats=[], actId=null, loading=false, prov="groq", provs=[], sbOpen=false, confCb=null, editIdx=null, shareLink="";
 let prefs=tp(PK,{}), profile=tp(PRK,{name:''}), userInfo=tp("greets_userinfo",{name:'',about:''});
 // FIX 2: pin/archive from localStorage
 let pinnedIds=tp(PIK,[]), archivedIds=tp(AIK,[]);
@@ -1058,7 +1260,6 @@ function toggleSB(){
   sbOpen=!sbOpen;
   var sb=document.getElementById('sb');
   if(sbOpen){
-        // Restore visibility before animation starts
     sb.style.visibility='visible';
     sb.classList.remove('collapsed');
   } else {
@@ -1265,6 +1466,9 @@ function oClick(e){
 
 // ─── CHATS ───
 function newChat(){
+  if(document.querySelector('.main').classList.contains('proj-mode')){
+    closeProjPage();
+  }
   const cur=gact();
   if(!cur||cur.msgs.length>0){const c={id:gid(),title:'Yangi suhbat',model:prov,msgs:[],created:new Date().toISOString()};chats.unshift(c);saveCh();actId=c.id;}
   renderHist();renderWelcome();hideErr();
@@ -1277,6 +1481,10 @@ function newChat(){
 }
 function loadChat(id){
   const c=chats.find(x=>x.id===id);if(!c)return;
+  // Agar loyiha sahifasida bolsak, undan chiqamiz
+  if(document.querySelector('.main').classList.contains('proj-mode')){
+    closeProjPage();
+  }
   actId=id;renderHist();renderAllMsgs(c);
   // Mobile: close sidebar after selecting chat
   if(window.innerWidth<=640 && sbOpen){
@@ -1292,14 +1500,14 @@ function renderAllMsgs(chat){
 }
 function delChat(id,e){
   if(e)e.stopPropagation();
-  openConf('Suhbatni o\'chirish','Bu suhbat butunlay o\'chiriladi.',()=>{
+  openConf("Suhbatni o'chirish","Bu suhbat butunlay o'chiriladi.",()=>{
     chats=chats.filter(c=>c.id!==id);
     pinnedIds=pinnedIds.filter(p=>p!==id);
     archivedIds=archivedIds.filter(a=>a!==id);
     delete chatProjects[id];
     saveCh();savePinned();saveArchived();saveChatProjects();
     if(actId===id){actId=null;renderWelcome();}
-    renderHist();toast("Suhbat o'chirildi");cm('confM');
+    renderHist();toast("Suhbat o'chirildi");cm("confM");
   });
 }
 function confirmDel(){if(!actId)return toast('Faol suhbat yo\'q');delChat(actId,null);}
@@ -1315,19 +1523,19 @@ function renderHist(q){
     const ql=q.toLowerCase();
     list=chats.filter(c=>c.title.toLowerCase().includes(ql)||c.msgs.some(m=>m.content.toLowerCase().includes(ql)));
   }
-  if(!list.length){w.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">${q?'Topilmadi':'Suhbat yo\'q'}</div>`;return;}
+  if(!list.length){w.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">${q?'Topilmadi':"Suhbat yo'q"}</div>`;return;}
 
   // Separate pinned
   const pinned=list.filter(c=>pinnedIds.includes(c.id));
   const unpinned=list.filter(c=>!pinnedIds.includes(c.id));
 
   if(pinned.length){
-    const l=document.createElement('div');
-    l.className='hlbl';
+    const l=document.createElement("div");
+    l.className="hlbl";
     l.innerHTML=`<svg class="hlbl-pin" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Mahkamlangan`;
     w.appendChild(l);
     pinned.forEach(c=>w.appendChild(buildHistItem(c,true)));
-    const div=document.createElement('div');div.className='divider';div.style.margin='4px 0';w.appendChild(div);
+    const div=document.createElement("div");div.className="divider";div.style.margin="4px 0";w.appendChild(div);
   }
 
   const t=new Date();t.setHours(0,0,0,0);
@@ -1335,31 +1543,19 @@ function renderHist(q){
   const wk=new Date(t);wk.setDate(t.getDate()-7);
   const g={t:[],y:[],w:[],o:[]};
   unpinned.forEach(c=>{const d=new Date(c.created);d.setHours(0,0,0,0);if(d>=t)g.t.push(c);else if(d>=y)g.y.push(c);else if(d>=wk)g.w.push(c);else g.o.push(c);});
-  const lb={t:'Bugun',y:'Kecha',w:"So'nggi 7 kun",o:'Oldingi'};
-  ['t','y','w','o'].forEach(k=>{
+  const lb={t:"Bugun",y:"Kecha",w:"So'nggi 7 kun",o:"Oldingi"};
+  ["t","y","w","o"].forEach(k=>{
     if(!g[k].length)return;
-    const l=document.createElement('div');l.className='hlbl';l.textContent=lb[k];w.appendChild(l);
+    const l=document.createElement("div");l.className="hlbl";l.textContent=lb[k];w.appendChild(l);
     g[k].forEach(c=>w.appendChild(buildHistItem(c,false)));
   });
 
-  // Show archived count as toggle — appended before chat list
-  const arcCount=archivedIds.filter(id=>chats.find(c=>c.id===id)).length;
-  if(arcCount&&!q){
-    const arcEl=document.createElement('div');
-    arcEl.className='nav-item arc-toggle-btn';
-    arcEl.id='arcToggleBtn';
-    arcEl.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Arxivlangan ('+arcCount+')';
-    arcEl.onclick=function(){
-      var already=document.getElementById('arcSection');
-      if(already){already.remove();arcEl.classList.remove('active-item');return;}
-      arcEl.classList.add('active-item');
-      var sec=document.createElement('div');
-      sec.id='arcSection';
-      var arcChats=chats.filter(function(c){return archivedIds.includes(c.id);});
-      arcChats.forEach(function(c){ sec.appendChild(buildHistItem(c,false)); });
-      arcEl.insertAdjacentElement('afterend', sec);
-    };
-    w.appendChild(arcEl);
+  // Update archive badge in sidebar
+  var arcCount=archivedIds.filter(function(id){return chats.find(function(c){return c.id===id;});}).length;
+  var arcBtn=document.getElementById("arcNavBtn");
+  if(arcBtn){
+    arcBtn.style.display=arcCount>0?'flex':'none';
+    arcBtn.querySelector('.arc-cnt').textContent='('+arcCount+')';
   }
 
   const pc=document.getElementById('pjCnt');if(pc)pc.textContent=chats.length+' ta suhbat';
@@ -1369,11 +1565,11 @@ function renderHist(q){
 
 function buildHistItem(c, isPinned){
   const el=document.createElement('div');
-  el.className='hi'+(c.id===actId?' active':'')+(isPinned?' pinned-item':'');
+  el.className="hi"+(c.id===actId?" active":"")+(isPinned?" pinned-item":"");
   el.onclick=()=>loadChat(c.id);
   const chatProjId=chatProjects[c.id];
   const proj=chatProjId?projects.find(p=>p.id===chatProjId):null;
-  const projTag=proj?`<span style="font-size:10px;color:var(--text3);background:var(--surf);border:1px solid var(--border);padding:0 5px;border-radius:3px;flex-shrink:0">${proj.emoji}</span>`:'';
+  const projTag=proj?`<span style="font-size:10px;color:var(--text3);background:var(--surf);border:1px solid var(--border);padding:0 5px;border-radius:3px;flex-shrink:0">${proj.emoji}</span>`:"";
   el.innerHTML=`
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--text3);flex-shrink:0"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
     <span class="hit">${esc(c.title)}</span>
@@ -1388,65 +1584,65 @@ function buildHistItem(c, isPinned){
 
 function quickPin(id, e){
   e.stopPropagation();
-  if(pinnedIds.includes(id)){pinnedIds=pinnedIds.filter(p=>p!==id);toast('Mahkamlash olib tashlandi');}
-  else{pinnedIds.unshift(id);toast('Mahkamlandi ✓');}
+  if(pinnedIds.includes(id)){pinnedIds=pinnedIds.filter(p=>p!==id);toast("Mahkamlash olib tashlandi");}
+  else{pinnedIds.unshift(id);toast("Mahkamlandi ✓");}
   savePinned();renderHist();
 }
 
 // ─── FIX 3: PROJECTS CRUD ───
 function renderProjList(){
-  const el=document.getElementById('pjList');
+  const el=document.getElementById("pjList");
   if(!el)return;
   el.innerHTML=projects.map(p=>{
     const count=chats.filter(c=>chatProjects[c.id]===p.id).length;
-    return `<div class="pjcard${p.id==='default'?' active-pj':''}">
+    return `<div class="pjcard${p.id==="default"?" active-pj":""}">
       <div class="pjic">${p.emoji}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:600;color:var(--text)">${esc(p.name)}</div>
         <div style="font-size:11px;color:var(--text3);margin-top:2px">${count} ta suhbat</div>
       </div>
       <div class="pj-actions">
-        ${p.id!=='default'?`
+        ${p.id!=="default"?`
         <button class="pj-act-btn" title="Tahrirlash" onclick="editProject('${p.id}',event)">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
         <button class="pj-act-btn del-pj" title="O'chirish" onclick="deleteProject('${p.id}',event)">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
-        </button>`:''}
+        </button>`:""}
       </div>
     </div>`;
-  }).join('');
+  }).join("");
 }
 
 function addProject(){
-  const name=document.getElementById('pjNewName').value.trim();
-  if(!name)return toast('Loyiha nomi kiriting');
-  const emoji=document.getElementById('pjEmoji').value;
+  const name=document.getElementById("pjNewName").value.trim();
+  if(!name)return toast("Loyiha nomi kiriting");
+  const emoji=document.getElementById("pjEmoji").value;
   const p={id:gid(),name,emoji,created:new Date().toISOString()};
   projects.push(p);
   saveProjects();
-  document.getElementById('pjNewName').value='';
+  document.getElementById("pjNewName").value="";
   renderProjList();
   renderHist();
-  toast('Loyiha yaratildi ✓');
+  toast("Loyiha yaratildi ✓");
 }
 
 function editProject(id, e){
   e.stopPropagation();
   const p=projects.find(x=>x.id===id);if(!p)return;
-  const name=prompt('Loyiha nomini o\'zgartiring:',p.name);
-  if(name===null)return;
-  if(!name.trim()){toast('Nom bo\'sh bo\'lmasin');return;}
-  p.name=name.trim();
-  saveProjects();
-  renderProjList();
-  renderHist();
-  toast('Loyiha yangilandi ✓');
+  openInputDialog("Loyiha nomini o'zgartiring", 'Loyiha nomi...', p.name, function(name){
+    if(!name){toast("Nom bo'sh bo'lmasin");return;}
+    p.name=name;
+    saveProjects();
+    renderProjList();
+    renderHist();
+    toast('Loyiha yangilandi ✓');
+  });
 }
 
 function deleteProject(id, e){
   e.stopPropagation();
-  openConf('Loyihani o\'chirish','Bu loyiha o\'chiriladi. Suhbatlar "Asosiy"ga qaytariladi.',()=>{
+  openConf("Loyihani o'chirish","Bu loyiha o'chiriladi. Suhbatlar \"Asosiy\"ga qaytariladi.",()=>{
     projects=projects.filter(p=>p.id!==id);
     // Move chats to default
     Object.keys(chatProjects).forEach(cid=>{if(chatProjects[cid]===id)delete chatProjects[cid];});
@@ -1454,7 +1650,7 @@ function deleteProject(id, e){
     cm('confM');
     renderProjList();
     renderHist();
-    toast('Loyiha o\'chirildi');
+    toast("Loyiha o'chirildi");
   });
 }
 
@@ -1485,75 +1681,82 @@ function assignChatToProject(projId){
   saveChatProjects();
   renderHist();
   cm('moveProjM');
-  toast(projId?'Loyihaga ko\'chirildi ✓':'Loyihadan chiqarildi');
+  toast(projId?"Loyihaga ko'chirildi ✓":"Loyihadan chiqarildi");
 }
 
 // Open projM — render list
 const _origOm=window.om;
 function om(id){
-  document.getElementById(id).classList.add('open');
-  if(id==='projM')renderProjList();
+  document.getElementById(id).classList.add("open");
+  if(id==="projM")renderProjList();
 }
 
 // ─── WELCOME ───
 function renderWelcome(){
   const fbU2=window._fbUser;
-  const uname=fbU2?fbU2.displayName?.split(' ')[0]:(userInfo.name||profile.name||'');
-  const greet=uname?`Salom, ${esc(uname)}! 👋`:'Greets bilan salomlashing';
-  document.getElementById('msgsArea').innerHTML=`<div class="welcome">
+  const uname=fbU2?fbU2.displayName?.split(" ")[0]:(userInfo.name||profile.name||"");
+  const greet=uname?`Salom, ${esc(uname)}! 👋`:"Greets bilan salomlashing";
+  document.getElementById("msgsArea").innerHTML=`<div class="welcome">
 <img class="wlogo" src="logogr.png" alt="G" style="width:60px;height:60px;border-radius:16px;object-fit:cover;margin-bottom:18px"
   onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
 <div class="wlogo-fb" style="width:60px;height:60px;border-radius:16px;background:var(--accent);display:none;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;margin-bottom:18px">G</div>
 <h1>${greet}</h1>
 <p>Yuqorida AI modelini tanlang, so'ng savolingizni yozing.</p>
 <div class="suggs">
-  <div class="sc" onclick="sendSug('Python dasturlashni qanday o\\'rganaman?')"><span class="sci">💻</span><div class="sct">Dasturlash</div><div class="scd">Python, JavaScript, kod</div></div>
+  <div class="sc" onclick="sendSug('Python dasturlashni qanday o\'rganaman?')"><span class="sci">💻</span><div class="sct">Dasturlash</div><div class="scd">Python, JavaScript, kod</div></div>
   <div class="sc" onclick="sendSug('Menga qiziqarli hikoya yoz')"><span class="sci">✍️</span><div class="sct">Ijodiy yozuv</div><div class="scd">Hikoya, esse, matn</div></div>
-  <div class="sc" onclick="sendSug('Sun\\'iy intellekt nima?')"><span class="sci">🧠</span><div class="sct">Tushuntir</div><div class="scd">Murakkab mavzular</div></div>
-  <div class="sc" onclick="sendSug('Ingliz tilini tez o\\'rganish maslahati')"><span class="sci">📚</span><div class="sct">Maslahat</div><div class="scd">Ta'lim, til o'rganish</div></div>
+  <div class="sc" onclick="sendSug('Sun\'iy intellekt nima?')"><span class="sci">🧠</span><div class="sct">Tushuntir</div><div class="scd">Murakkab mavzular</div></div>
+  <div class="sc" onclick="sendSug('Ingliz tilini tez o\'rganish maslahati')"><span class="sci">📚</span><div class="sct">Maslahat</div><div class="scd">Ta'lim, til o'rganish</div></div>
 </div></div>`;}
 
 // ─── SEND ───
 async function sendMsg(){
-  const inp=document.getElementById('chatIn');const text=inp.value.trim();
+  const inp=document.getElementById("chatIn");const text=inp.value.trim();
   const hasFiles=pendingFiles.length>0;
   if(!text&&!hasFiles||loading)return;
-  if(!actId||!gact()){const c={id:gid(),title:(text||pendingFiles[0]?.name||'Fayl').slice(0,42),model:prov,msgs:[],created:new Date().toISOString()};chats.unshift(c);actId=c.id;saveCh();renderHist();}
+  if(!actId||!gact()){const c={id:gid(),title:(text||pendingFiles[0]?.name||"Fayl").slice(0,42),model:prov,msgs:[],created:new Date().toISOString()};chats.unshift(c);actId=c.id;saveCh();renderHist();}
   const chat=gact();
-  const ws=document.querySelector('.welcome');if(ws)ws.remove();
+  const ws=document.querySelector(".welcome");if(ws)ws.remove();
 
   // Build user message content (include file info)
   let msgContent=text;
   if(hasFiles){
-    const fnames=pendingFiles.map(f=>f.name).join(', ');
-    msgContent=(text?text+'\n':'')+'[Fayl(lar): '+fnames+']';
+    const fnames=pendingFiles.map(f=>f.name).join(", ");
+    msgContent=(text?text+"\n":"")+"[Fayl(lar): "+fnames+"]";
   }
 
-  const um={role:'user',content:msgContent,time:nt(),files:pendingFiles.map(f=>({name:f.name,size:f.size,type:f.type,dataUrl:f.dataUrl}))};
+  const um={role:"user",content:msgContent,time:nt(),files:pendingFiles.map(f=>({name:f.name,size:f.size,type:f.type,dataUrl:f.dataUrl}))};
   chat.msgs.push(um);
-  if(chat.msgs.filter(m=>m.role==='user').length===1){chat.title=(text||pendingFiles[0]?.name||'Fayl').slice(0,42);renderHist();}
+  if(chat.msgs.filter(m=>m.role==="user").length===1){chat.title=(text||pendingFiles[0]?.name||"Fayl").slice(0,42);renderHist();}
   saveCh();appendEl(um,chat.msgs.length-1);
 
   // Clear
-  inp.value='';inp.style.height='auto';ucc(0);
+  inp.value="";inp.style.height="auto";ucc(0);
   pendingFiles=[];renderFilePreview();
   setLoad(true);hideErr();
 
   const ty=addTyp();
-  // Foydalanuvchi ma'lumotlarini xabarlarga qo'shish
+  // Foydalanuvchi ma"lumotlarini xabarlarga qo"shish
   const sysCtx=[];
   const fbU=window._fbUser;
-  const uName=fbU?fbU.displayName:(userInfo.name||profile.name||'');
-  const uAbout=userInfo.about||'';
+  const uName=fbU?fbU.displayName:(userInfo.name||profile.name||"");
+  const uAbout=userInfo.about||"";
   if(uName||uAbout){
-    const ctx='[Foydalanuvchi haqida: Ismi: '+(uName||'noma\'lum')+(uAbout?', '+uAbout:'')+']';
-    sysCtx.push({role:'user',content:ctx},{role:'assistant',content:'Tushunarli, eslab qoldim.'});
+    const ctx="[Foydalanuvchi haqida: Ismi: "+(uName||"noma'lum")+(uAbout?", "+uAbout:"")+"]";
+    sysCtx.push({role:"user",content:ctx},{role:"assistant",content:"Tushunarli, eslab qoldim."});
   }
-  const api=[...sysCtx,...chat.msgs.filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:m.content}))];
+  // Loyiha ko"rsatmalari
+  const _pjId=actId?chatProjects[actId]:null;
+  const _pjD=_pjId&&window._projData?window._projData[_pjId]:null;
+  const _pjI=(_pjD&&_pjD.instr)?_pjD.instr:(chat.projInstr||"");
+  if(_pjI&&_pjI.trim()){
+    sysCtx.unshift({role:"user",content:"[Loyiha ko'rsatmalari: "+_pjI+"]"},{role:"assistant",content:"Qabul qildim."});
+  }
+  const api=[...sysCtx,...chat.msgs.filter(m=>m.role==="user"||m.role==="assistant").map(m=>({role:m.role,content:m.content}))];
   try{
-    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:api,provider:prov})});
+    const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:api,provider:prov})});
     ty.remove();const d=await r.json();
-    if(!r.ok){showErr(d.error||'Server xatosi');chat.msgs.pop();saveCh();}
+    if(!r.ok){showErr(d.error||"Server xatosi");chat.msgs.pop();saveCh();}
     else{const am={role:'assistant',content:d.reply,model:d.providerName,time:nt()};chat.msgs.push(am);saveCh();appendEl(am,chat.msgs.length-1);if(typeof saveToFirestore==='function')saveToFirestore();}
   }catch(e){ty.remove();showErr('Serverga ulanib bo\'lmadi');chat.msgs.pop();saveCh();}
   setLoad(false);scrollBot();
@@ -1685,13 +1888,13 @@ function hk(e){
   }
 }
 function toast(msg){const t=document.getElementById('toast');document.getElementById('toastM').textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2600);}
-function showErr(msg){document.getElementById('errM').textContent=msg;document.getElementById('errB').style.display='flex';}
-function hideErr(){document.getElementById('errB').style.display='none';}
-function cm(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.ov').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)cm(el.id);}));
-document.getElementById('editov').addEventListener('click',e=>{if(e.target===document.getElementById('editov'))closeEdit();});
-document.getElementById('cameraOv').addEventListener('click',e=>{if(e.target===document.getElementById('cameraOv'))closeCamera();});
-function openConf(title,msg,cb){confCb=cb;document.getElementById('confTit').textContent=title;document.getElementById('confMsg').textContent=msg;om('confM');}
+function showErr(msg){document.getElementById('errM').textContent=msg;document.getElementById('errB').style.display="flex";}
+function hideErr(){document.getElementById("errB").style.display="none";}
+function cm(id){document.getElementById(id).classList.remove("open");}
+document.querySelectorAll(".ov").forEach(el=>el.addEventListener("click",e=>{if(e.target===el)cm(el.id);}));
+document.getElementById("editov").addEventListener("click",e=>{if(e.target===document.getElementById("editov"))closeEdit();});
+document.getElementById("cameraOv").addEventListener("click",e=>{if(e.target===document.getElementById("cameraOv"))closeCamera();});
+function openConf(title,msg,cb){confCb=cb;document.getElementById("confTit").textContent=title;document.getElementById("confMsg").textContent=msg;om("confM");}
 function ccb(){if(confCb)confCb();}
 
 
@@ -1713,9 +1916,9 @@ async function googleSignIn() {
   try {
     const result = await window._fb.signInWithPopup(window._fb.auth, window._fb.gProv);
     await syncFromFirestore(result.user);
-    cm('profM');
-    toast('✓ ' + result.user.displayName);
-  } catch(e) { toast('Kirish xatosi: ' + e.message); }
+    cm("profM");
+    toast("✓ " + result.user.displayName);
+  } catch(e) { toast("Kirish xatosi: " + e.message); }
 }
 
 async function googleSignOut() {
@@ -1723,14 +1926,14 @@ async function googleSignOut() {
   await window._fb.signOut(window._fb.auth);
   window._fbUser = null;
   updateUserBar(null);
-  toast('Chiqildi');
-  cm('profM');
+  toast("Chiqildi");
+  cm("profM");
 }
 
 async function syncFromFirestore(user) {
   if (!window._fb || !user) return;
   try {
-    const snap = await window._fb.get(window._fb.ref(window._fb.rtdb, 'users/' + user.uid));
+    const snap = await window._fb.get(window._fb.ref(window._fb.rtdb, "users/" + user.uid));
     if (snap.exists()) {
       const d = snap.val();
       if (d.chats) { chats = d.chats; saveCh(); }
@@ -1738,7 +1941,7 @@ async function syncFromFirestore(user) {
       if (d.archivedIds) { archivedIds = d.archivedIds; saveArchived(); }
       if (d.projects) { projects = d.projects; saveProjects(); }
       if (d.chatProjects) { chatProjects = d.chatProjects; saveCPJ(); }
-      if (d.prefs) { prefs = d.prefs; savePr(); applyTheme(prefs.theme || 'light', false); }
+      if (d.prefs) { prefs = d.prefs; savePr(); applyTheme(prefs.theme || "light", false); }
       if (d.userInfo) { userInfo = d.userInfo; saveUserInfo(); }
       renderHist();
       if (actId) renderAllMsgs(gact()); else renderWelcome();
@@ -1754,19 +1957,19 @@ async function saveToFirestore() {
     const clean = chats.map(c => ({...c, msgs: c.msgs.map(m =>
       m.files ? {...m, files: m.files.map(f => ({name:f.name, size:f.size, type:f.type}))} : m
     )}));
-    // Realtime Database: undefined qiymatlarni null ga o'girish kerak
+    // Realtime Database: undefined qiymatlarni null ga o"girish kerak
     const payload = JSON.parse(JSON.stringify({
       chats: clean, pinnedIds, archivedIds, projects, chatProjects, prefs, userInfo,
       updatedAt: Date.now()
     }));
-    await window._fb.set(window._fb.ref(window._fb.rtdb, 'users/' + user.uid), payload);
-  } catch(e) { console.warn('Realtime DB yozish:', e.message); }
+    await window._fb.set(window._fb.ref(window._fb.rtdb, "users/" + user.uid), payload);
+  } catch(e) { console.warn("Realtime DB yozish:", e.message); }
 }
 
 function updateUserBar(user) {
-  const av = document.getElementById('sbav');
-  const nm = document.getElementById('sbnm');
-  const sub = document.querySelector('.usub');
+  const av = document.getElementById("sbav");
+  const nm = document.getElementById("sbnm");
+  const sub = document.querySelector(".usub");
   if (user) {
     nm.textContent = user.displayName || user.email;
     if (sub) sub.textContent = user.email;
@@ -1774,22 +1977,22 @@ function updateUserBar(user) {
       if (user.photoURL) {
         av.innerHTML = '<img class="auth-photo" src="' + user.photoURL + '" alt=""/>';
       } else {
-        av.textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
+        av.textContent = (user.displayName || user.email || "U")[0].toUpperCase();
       }
     }
   } else {
-    if (nm) nm.textContent = 'Anonim';
-    if (sub) sub.textContent = 'Bepul rejim';
-    if (av) av.textContent = 'A';
+    if (nm) nm.textContent = "Anonim";
+    if (sub) sub.textContent = "Bepul rejim";
+    if (av) av.textContent = "A";
   }
 }
 
 function renderProfModal() {
-  const body = document.getElementById('profBody');
+  const body = document.getElementById("profBody");
   if (!body) return;
   const user = window._fbUser;
   if (user) {
-    const ini = (user.displayName || 'U')[0].toUpperCase();
+    const ini = (user.displayName || "U")[0].toUpperCase();
     const avHTML = user.photoURL
       ? '<img class="auth-photo" src="' + user.photoURL + '" style="width:52px;height:52px;border-radius:50%;object-fit:cover;"/>'
       : '<div class="pavbig">' + ini + '</div>';
@@ -1797,17 +2000,17 @@ function renderProfModal() {
       <div class="pavrow">
         ${avHTML}
         <div>
-          <div style="font-size:14px;font-weight:600;color:var(--text)">${esc(user.displayName || '')}</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:3px">${esc(user.email || '')}</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text)">${esc(user.displayName || "")}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:3px">${esc(user.email || "")}</div>
         </div>
       </div>
       <div class="pfield" style="margin-top:14px">
         <div class="plbl">AI sizni qanday chaqirsin?</div>
-        <input class="pin" id="uiName" type="text" placeholder="Ismingiz..." value="${esc(userInfo.name||user.displayName||'')}"/>
+        <input class="pin" id="uiName" type="text" placeholder="Ismingiz..." value="${esc(userInfo.name||user.displayName||"")}"/>
       </div>
       <div class="pfield">
-        <div class="plbl">O'zingiz haqida (ixtiyoriy)</div>
-        <input class="pin" id="uiAbout" type="text" placeholder="Masalan: dasturchi, 25 yosh, Toshkentda yashayman..." value="${esc(userInfo.about||'')}"/>
+        <div class="plbl">O"zingiz haqida (ixtiyoriy)</div>
+        <input class="pin" id="uiAbout" type="text" placeholder="Masalan: dasturchi, 25 yosh, Toshkentda yashayman..." value="${esc(userInfo.about||"")}"/>
       </div>
       <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:8px">
         <button class="btn-d" onclick="googleSignOut()">Chiqish</button>
@@ -1835,50 +2038,50 @@ function renderProfModal() {
       <div class="auth-divider">yoki</div>
       <div class="pfield">
         <div class="plbl">AI sizni qanday chaqirsin?</div>
-        <input class="pin" id="uiName" type="text" placeholder="Ismingiz..." value="${esc(userInfo.name||'')}"/>
+        <input class="pin" id="uiName" type="text" placeholder="Ismingiz..." value="${esc(userInfo.name||"")}"/>
       </div>
       <div class="pfield">
-        <div class="plbl">O'zingiz haqida (ixtiyoriy)</div>
-        <input class="pin" id="uiAbout" type="text" placeholder="Masalan: dasturchi, 25 yosh..." value="${esc(userInfo.about||'')}"/>
+        <div class="plbl">O"zingiz haqida (ixtiyoriy)</div>
+        <input class="pin" id="uiAbout" type="text" placeholder="Masalan: dasturchi, 25 yosh..." value="${esc(userInfo.about||"")}"/>
       </div>
       <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:8px">
         <button class="btn-s" onclick="cm('profM')">Bekor</button>
         <button class="btn-p" onclick="saveUserInfoFromModal()">Saqlash</button>
       </div>`;
-    const pi = document.getElementById('pinput');
-    if (pi) pi.value = profile.name || '';
+    const pi = document.getElementById("pinput");
+    if (pi) pi.value = profile.name || "";
   }
 }
 
 // Patch openProf to use renderProfModal
 const _origOpenProf = window.openProf;
-function openProf() { om('profM'); renderProfModal(); }
+function openProf() { om("profM"); renderProfModal(); }
 
 // Patch saveToFirestore calls into existing save functions
 const _origSaveCh = saveCh;
-// We'll call saveToFirestore after AI responses (patched in sendMsg area is complex)
-// Instead patch the send flow - override the existing fetch block won't work easily
+// We"ll call saveToFirestore after AI responses (patched in sendMsg area is complex)
+// Instead patch the send flow - override the existing fetch block won"t work easily
 // so we attach to the existing sendMsg by wrapping it
 const _origSendMsg = window.sendMsg;
 
 function saveUserInfoFromModal(){
-  const n=document.getElementById('uiName');
-  const a=document.getElementById('uiAbout');
+  const n=document.getElementById("uiName");
+  const a=document.getElementById("uiAbout");
   if(n) userInfo.name=n.value.trim();
   if(a) userInfo.about=a.value.trim();
   saveUserInfo();
   // Firestore ga ham saqlash
-  if(typeof saveToFirestore==='function') saveToFirestore();
-  cm('profM');
-  toast('Saqlandi');
+  if(typeof saveToFirestore==="function") saveToFirestore();
+  cm("profM");
+  toast("Saqlandi");
   // Welcome screen yangilansin
-  if(document.querySelector('.welcome')) renderWelcome();
+  if(document.querySelector(".welcome")) renderWelcome();
 }
 
 // ─── FILE VIEWER ─────────────────────────────────────────────────────────
 function openFileViewer(file){
-  const viewer  = document.getElementById('fileViewer');
-  const content = document.getElementById('fvContent');
+  const viewer  = document.getElementById("fileViewer");
+  const content = document.getElementById("fvContent");
   const nameEl  = document.getElementById('fvName');
   const dlBtn   = document.getElementById('fvDownload');
 
@@ -1897,11 +2100,11 @@ function openFileViewer(file){
   const isImage = file.type==='image' || /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)$/i.test(file.name||'');
   const isAudio = file.type==='audio' || /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name||'');
   const isText  = /\.(txt|md|js|ts|jsx|tsx|html|css|json|xml|csv|py|java|cpp|c|h|sh|yaml|yml|env|log)$/i.test(file.name||'');
-  const isPdf   = /\.pdf$/i.test(file.name||'');
+  const isPdf   = /\.pdf$/i.test(file.name||"");
 
   if(isImage && file.dataUrl){
-    const img = document.createElement('img');
-    img.className = 'fv-img';
+    const img = document.createElement("img");
+    img.className = "fv-img";
     img.src = file.dataUrl;
     img.alt = file.name;
     content.appendChild(img);
@@ -1924,9 +2127,9 @@ function openFileViewer(file){
   else if(isText && file.dataUrl){
     // Decode base64 text
     try{
-      const base64 = file.dataUrl.split(',')[1];
+      const base64 = file.dataUrl.split(",")[1];
       const text   = decodeURIComponent(escape(atob(base64)));
-      const ext    = (file.name||'').split('.').pop().toLowerCase();
+      const ext    = (file.name||"").split(".").pop().toLowerCase();
       content.innerHTML = `
         <div class="fv-doc">
           <div class="fv-doc-header">
@@ -1941,7 +2144,7 @@ function openFileViewer(file){
               <div class="fv-doc-size">${fmtBytes(file.size||0)} · ${ext.toUpperCase()}</div>
             </div>
           </div>
-          <pre style="margin:0;font-family:'Geist Mono',monospace;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text)">${esc(text)}</pre>
+          <pre style="margin:0;font-family:"Geist Mono",monospace;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text)">${esc(text)}</pre>
         </div>`;
     }catch(e){
       content.innerHTML = `<div class="fv-unknown"><div class="fv-unknown-icon">
@@ -1949,13 +2152,13 @@ function openFileViewer(file){
           <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
         </svg></div>
         <div style="font-size:14px;color:var(--text)">${esc(file.name)}</div>
-        <div style="font-size:12px;color:var(--text3)">Faylni o'qib bo'lmadi</div>
+        <div style="font-size:12px;color:var(--text3)">Faylni o'qib bo"lmadi</div>
       </div>`;
     }
   }
   else{
     // Unknown / PDF / other - show info card
-    const ext = (file.name||'file').split('.').pop().toUpperCase();
+    const ext = (file.name||"file").split(".").pop().toUpperCase();
     content.innerHTML = `
       <div class="fv-unknown">
         <div class="fv-unknown-icon">
@@ -1964,16 +2167,16 @@ function openFileViewer(file){
             <polyline points="14 2 14 8 20 8"/>
           </svg>
         </div>
-        <div style="font-size:16px;font-weight:700;color:var(--text)">${esc(file.name||'Fayl')}</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">${esc(file.name||"Fayl")}</div>
         <div style="font-size:13px;color:var(--text3)">${fmtBytes(file.size||0)} · ${ext} fayl</div>
-        ${file.dataUrl ? `<a class="fv-btn" href="${file.dataUrl}" download="${esc(file.name||'file')}" style="width:auto;padding:8px 16px;font-size:13px;font-weight:500;font-family:Geist,sans-serif;margin-top:8px;gap:7px;text-decoration:none">
+        ${file.dataUrl ? `<a class="fv-btn" href="${file.dataUrl}" download="${esc(file.name||"file")}" style="width:auto;padding:8px 16px;font-size:13px;font-weight:500;font-family:Geist,sans-serif;margin-top:8px;gap:7px;text-decoration:none">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Yuklab olish
-        </a>` : ''}
+        </a>` : ""}
       </div>`;
   }
 
-  viewer.classList.add('open');
+  viewer.classList.add("open");
 }
 
 function closeFileViewer(){
@@ -2020,7 +2223,6 @@ document.addEventListener('keydown', function(e){
     if(absDx < MIN_SWIPE || absDy > absDx * 0.8) return;
     var sb = document.getElementById('sb');
     if(dx > 0 && !sbOpen){
-            // Swipe right — open
       sbOpen = true;
       sb.classList.remove('collapsed');
       document.body.classList.remove('sb-collapsed');
@@ -2118,7 +2320,6 @@ function toggleSpeechInput(){
   rec.onend = function(){
     btn.classList.remove('recording');
     window._speechActive = false;
-          // Swipe right — open
     var inp = document.getElementById('chatIn');
     if(inp && inp.value.trim().length > 0){
       setTimeout(sendMsg, 300);
@@ -2164,12 +2365,12 @@ function showChatMenu(chatId, e){
   var mw = 168, mh = 110;
   if(x + mw > window.innerWidth)  x = window.innerWidth - mw - 8;
   if(y + mh > window.innerHeight) y = y - mh;
-  menu.style.left = x + 'px';
-  menu.style.top  = y + 'px';
+  menu.style.left = x + "px";
+  menu.style.top  = y + "px";
 }
 
 function closeChatMenu(){
-  var m = document.getElementById('chatCtxMenu');
+  var m = document.getElementById("chatCtxMenu");
   if(m) m.remove();
   _ctxMenuId = null;
 }
@@ -2180,13 +2381,13 @@ function ctxPin(){
   closeChatMenu();
   if(pinnedIds.includes(id)){
     pinnedIds = pinnedIds.filter(function(p){return p!==id;});
-    toast('Mahkamlash olib tashlandi');
+    toast("Mahkamlash olib tashlandi");
   } else {
     pinnedIds.unshift(id);
-    toast('Mahkamlandi');
+    toast("Mahkamlandi");
   }
   savePinned(); renderHist();
-  if(typeof saveToFirestore==='function') saveToFirestore();
+  if(typeof saveToFirestore==="function") saveToFirestore();
 }
 
 function ctxShare(){
@@ -2204,8 +2405,8 @@ function ctxDelete(){
 }
 
 // Close menu on any click outside
-document.addEventListener('click', function(e){
-  var m = document.getElementById('chatCtxMenu');
+document.addEventListener("click", function(e){
+  var m = document.getElementById("chatCtxMenu");
   if(m && !m.contains(e.target)) closeChatMenu();
 });
 
@@ -2213,16 +2414,16 @@ document.addEventListener('click', function(e){
 var _projOpen = false;
 function toggleProjSection(){
   _projOpen = !_projOpen;
-  var sec   = document.getElementById('projSection');
-  var chev  = document.getElementById('projChev');
+  var sec   = document.getElementById("projSection");
+  var chev  = document.getElementById("projChev");
   if(!sec) return;
   if(_projOpen){
-    sec.style.display = 'block';
-    if(chev) chev.style.transform = 'rotate(180deg)';
+    sec.style.display = "block";
+    if(chev) chev.style.transform = "rotate(180deg)";
     renderProjSection();
   } else {
-    sec.style.display = 'none';
-    if(chev) chev.style.transform = '';
+    sec.style.display = "none";
+    if(chev) chev.style.transform = "";
   }
 }
 
@@ -2234,22 +2435,26 @@ function renderProjSection(){
     var cnt = chats.filter(function(c){return chatProjects[c.id]===p.id;}).length;
     var item = document.createElement('div');
     item.className = 'proj-item';
+    item.dataset.pid = p.id;
     item.innerHTML =
       '<span class="proj-item-ic">' + p.emoji + '</span>' +
       '<span style="flex:1;overflow:hidden;text-overflow:ellipsis">' + esc(p.name) + '</span>' +
       '<span style="font-size:10px;color:var(--text3)">' + cnt + '</span>';
+    item.classList.toggle('active-proj', p.id===_activeProjId);
+    var pid = p.id;
     item.onclick = function(){
-      // Filter chats by project
-      filterByProject(p.id);
+      openProjPage(pid);
     };
     sec.appendChild(item);
   });
-  // Manage link
-  var manage = document.createElement('div');
-  manage.className = 'proj-item-manage';
-  manage.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2m0 18v-2m-6.36-3.64l1.41-1.41m10.31 0l1.41 1.41M2 12h2m18 0h-2"/></svg> Loyihalarni boshqarish';
-  manage.onclick = function(){ om('projM'); };
-  sec.appendChild(manage);
+  // New project button
+  var newPj = document.createElement('div');
+  newPj.className = 'proj-item-manage';
+  newPj.innerHTML =
+    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>' +
+    'Yangi loyiha';
+  newPj.onclick = function(){ showNewProjDialog(); };
+  sec.appendChild(newPj);
 }
 
 var _filterProjId = null;
@@ -2281,6 +2486,270 @@ function filterByProject(projId){
   }
   msgsEl.addEventListener('scroll', checkScroll, {passive:true});
 })();
+
+// ─── PROJECT PAGE ────────────────────────────────────────────────────
+var _activeProjId = null;
+// Store project instructions and files
+if(!window._projData) window._projData = {}; // projId -> {instr, files:[]}
+
+function openProjPage(projId){
+  var proj = projects.find(function(p){return p.id===projId;});
+  if(!proj) return;
+  _activeProjId = projId;
+  if(!window._projData[projId]) window._projData[projId] = {instr:'', files:[]};
+
+  // Update header
+  document.getElementById('ppEmoji').textContent = proj.emoji;
+  document.getElementById('ppName').textContent  = proj.name;
+
+  // Switch main to project mode
+  document.querySelector('.main').classList.add('proj-mode');
+  document.getElementById('projPage').classList.add('active');
+
+  // Render chats for this project
+  renderProjChats(projId);
+
+  // Restore instructions
+  var ta = document.getElementById('ppInstrTa');
+  if(ta){
+    ta.value = window._projData[projId].instr || '';
+    var instrBody = document.getElementById('ppInstrBody');
+    var instrHdr  = document.getElementById('ppInstrHdr');
+    if(ta.value){
+      instrBody.style.display = 'block';
+      instrHdr.classList.remove('no-content');
+      document.getElementById('ppInstrIcon').innerHTML = '<line x1="5" y1="12" x2="19" y2="12"/>';
+    }
+  }
+
+  // Render files
+  renderProjFiles(projId);
+
+  // Mark active in sidebar
+  var sec = document.getElementById('projSection');
+  if(sec){
+    sec.querySelectorAll('.proj-item').forEach(function(el){
+      el.classList.toggle('active-proj', el.dataset.pid===projId);
+    });
+  }
+}
+
+function closeProjPage(){
+  _activeProjId = null;
+  document.querySelector(".main").classList.remove("proj-mode");
+  document.getElementById("projPage").classList.remove("active");
+  // Deselect in sidebar
+  var sec = document.getElementById("projSection");
+  if(sec) sec.querySelectorAll(".proj-item").forEach(function(el){el.classList.remove("active-proj");});
+}
+
+function renderProjChats(projId){
+  var list = document.getElementById('ppChatList');
+  if(!list) return;
+  var projChats = chats.filter(function(c){return chatProjects[c.id]===projId;});
+  if(!projChats.length){
+    list.innerHTML = '<div class="pp-no-chats">Hali suhbat yo\'q.<br>Yuqoridagi tugmani bosib yangi suhbat boshlang.</div>';
+    return;
+  }
+  list.innerHTML = projChats.map(function(c){
+    var lastMsg = c.msgs.length ? c.msgs[c.msgs.length-1] : null;
+    var preview = lastMsg ? lastMsg.content.slice(0,60) : 'Yangi suhbat';
+    var date = new Date(c.created).toLocaleDateString('uz-UZ',{month:'short',day:'numeric'});
+    return '<div class="pp-chat-card" onclick="openProjChat(\''+c.id+'\')">'+
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--text3);flex-shrink:0"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div class="pp-chat-title">'+esc(c.title)+'</div>'+
+        '<div style="font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(preview)+'</div>'+
+      '</div>'+
+      '<div class="pp-chat-time">'+date+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+function openProjChat(chatId){
+  closeProjPage();
+  loadChat(chatId);
+}
+
+function startProjChat(){
+  var c = {id:gid(), title:"Yangi suhbat", model:prov, msgs:[], created:new Date().toISOString()};
+  chats.unshift(c);
+  chatProjects[c.id] = _activeProjId;
+  // Store project instructions in chat metadata
+  if(window._projData[_activeProjId] && window._projData[_activeProjId].instr){
+    c.projInstr = window._projData[_activeProjId].instr;
+  }
+  saveCh(); saveChatProjects();
+  closeProjPage();
+  actId = c.id;
+  renderHist(); renderWelcome();
+}
+
+function editCurrentProject(){
+  if(!_activeProjId) return;
+  var proj = projects.find(function(p){return p.id===_activeProjId;});
+  if(!proj) return;
+  openInputDialog("Loyiha nomini o'zgartiring", 'Loyiha nomi...', proj.name, function(name){
+    if(!name) return;
+    proj.name = name;
+    saveProjects();
+    document.getElementById('ppName').textContent = proj.name;
+    renderProjSection();
+    toast('Loyiha yangilandi');
+    if(typeof saveToFirestore==='function') saveToFirestore();
+  });
+}
+
+function deleteCurrentProject(){
+  if(!_activeProjId) return;
+  openConf("Loyihani o'chirish", "Bu loyiha o'chiriladi. Suhbatlar saqlanib qoladi.", function(){
+    var id = _activeProjId;
+    closeProjPage();
+    projects = projects.filter(function(p){return p.id!==id;});
+    Object.keys(chatProjects).forEach(function(cid){if(chatProjects[cid]===id)delete chatProjects[cid];});
+    saveProjects(); saveChatProjects();
+    cm('confM');
+    renderHist(); renderProjSection();
+    toast("Loyiha o'chirildi");
+    if(typeof saveToFirestore==='function') saveToFirestore();
+  });
+}
+
+function toggleProjInstr(){
+  var body = document.getElementById('ppInstrBody');
+  var hdr  = document.getElementById('ppInstrHdr');
+  var icon = document.getElementById('ppInstrIcon');
+  if(!body) return;
+  var open = body.style.display==='none';
+  body.style.display = open ? 'block' : 'none';
+  hdr.classList.toggle('no-content', !open);
+  icon.innerHTML = open
+    ? '<line x1="5" y1="12" x2="19" y2="12"/>'
+    : '<path d="M12 5v14M5 12h14"/>';
+  if(open) document.getElementById('ppInstrTa').focus();
+}
+
+function saveProjInstr(){
+  if(!_activeProjId) return;
+  if(!window._projData[_activeProjId]) window._projData[_activeProjId]={instr:"",files:[]};
+  window._projData[_activeProjId].instr = document.getElementById("ppInstrTa").value;
+}
+
+function triggerProjFileInput(){
+  var inp = document.getElementById('projFileInput');
+  if(inp) inp.click();
+}
+
+function addProjFiles(e){
+  if(!_activeProjId) return;
+  var files = Array.from(e.target.files);
+  if(!files.length) return;
+  if(!window._projData[_activeProjId]) window._projData[_activeProjId]={instr:'',files:[]};
+  var remaining = files.length;
+  files.forEach(function(f){
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      window._projData[_activeProjId].files.push({name:f.name,size:f.size,type:f.type,dataUrl:ev.target.result});
+      remaining--;
+      if(remaining===0){
+        renderProjFiles(_activeProjId);
+        toast(files.length + " ta fayl qo'shildi");
+      }
+    };
+    reader.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+
+function renderProjFiles(projId){
+  var body = document.getElementById('ppFilesBody');
+  var list = document.getElementById('ppFileList');
+  if(!body||!list) return;
+  var data = window._projData[projId];
+  if(!data||!data.files.length){
+    body.style.display='none';
+    document.querySelector('#ppSide .pp-panel:last-child .pp-panel-hdr').classList.add('no-content');
+    return;
+  }
+  body.style.display='block';
+  document.querySelector('#ppSide .pp-panel:last-child .pp-panel-hdr').classList.remove('no-content');
+  if(!window._projFileReg) window._projFileReg={};
+  data.files.forEach(function(f,i){ window._projFileReg['pf'+i]=f; });
+  list.innerHTML = data.files.map(function(f,i){
+    var rk = 'pf'+i;
+    return '<div class="pp-file-item" style="cursor:pointer" onclick="event.stopPropagation();openFileViewer(window._projFileReg[\''+rk+'\'])">'+
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'+
+      '<span style="flex:1;overflow:hidden;text-overflow:ellipsis">'+esc(f.name)+'</span>'+
+      '<span style="color:var(--text3)">'+fmtBytes(f.size)+'</span>'+
+      '<button onclick="event.stopPropagation();removeProjFile('+i+')" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:0 0 0 6px">'+
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'+
+      '</button>'+
+    '</div>';
+  }).join('');
+}
+
+function removeProjFile(idx){
+  if(!_activeProjId||!window._projData[_activeProjId]) return;
+  window._projData[_activeProjId].files.splice(idx,1);
+  renderProjFiles(_activeProjId);
+}
+
+// ─── ARCHIVE INLINE TOGGLE ──────────────────────────────────────────
+var _arcOpen = false;
+function toggleArchiveSection(){
+  _arcOpen = !_arcOpen;
+  var sec  = document.getElementById('arcInlineSection');
+  var chev = document.getElementById('arcChev');
+  var btn  = document.getElementById('arcNavBtn');
+  if(!sec) return;
+  if(_arcOpen){
+    sec.style.display = 'block';
+    if(chev) chev.style.transform = 'rotate(180deg)';
+    if(btn) btn.classList.add('active-item');
+    var arcChats = chats.filter(function(c){return archivedIds.includes(c.id);});
+    sec.innerHTML = '';
+    arcChats.forEach(function(c){sec.appendChild(buildHistItem(c,false));});
+  } else {
+    sec.style.display = 'none';
+    if(chev) chev.style.transform = '';
+    if(btn) btn.classList.remove('active-item');
+  }
+}
+
+// Update renderProjSection to add data-pid
+
+function showNewProjDialog(){
+  openInputDialog('Yangi loyiha', 'Loyiha nomi...', '', function(name){
+    if(!name) return;
+    var emoji = '📁';
+    var p = {id:gid(), name:name, emoji:emoji, created:new Date().toISOString()};
+    projects.push(p);
+    saveProjects();
+    renderProjSection();
+    renderHist();
+    toast('Loyiha yaratildi');
+    if(_projOpen) openProjPage(p.id);
+    if(typeof saveToFirestore==='function') saveToFirestore();
+  });
+}
+
+// ─── TEXT INPUT DIALOG (replaces prompt()) ──────────────────────────
+var _inputCb = null;
+function openInputDialog(title, placeholder, defaultVal, cb){
+  _inputCb = cb;
+  document.getElementById('inputTit').textContent = title;
+  var f = document.getElementById('inputField');
+  f.placeholder = placeholder || '';
+  f.value = defaultVal || '';
+  om('inputM');
+  setTimeout(function(){ f.focus(); f.select(); }, 80);
+}
+function inputOk(){
+  var v = document.getElementById('inputField').value.trim();
+  cm('inputM');
+  if(_inputCb) _inputCb(v);
+  _inputCb = null;
+}
 </script>
 
 <!-- FILE VIEWER MODAL -->
